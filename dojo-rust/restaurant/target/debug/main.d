@@ -1,0 +1,1 @@
+/home/anthony/repos/github.com/dojo/dojo-rust/restaurant/target/debug/main: /home/anthony/repos/github.com/dojo/dojo-rust/restaurant/src/bin/main.rs /home/anthony/repos/github.com/dojo/dojo-rust/restaurant/src/lib.rs
