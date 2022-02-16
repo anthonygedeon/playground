@@ -1,0 +1,12 @@
+/home/anthony/repos/github.com/dojo/dojo-experiments/exp_2/target/debug/deps/bytemuck-ba46fcf37247833c.rmeta: /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/lib.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/zeroable.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/pod.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/contiguous.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/offset_of.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/transparent.rs
+
+/home/anthony/repos/github.com/dojo/dojo-experiments/exp_2/target/debug/deps/libbytemuck-ba46fcf37247833c.rlib: /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/lib.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/zeroable.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/pod.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/contiguous.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/offset_of.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/transparent.rs
+
+/home/anthony/repos/github.com/dojo/dojo-experiments/exp_2/target/debug/deps/bytemuck-ba46fcf37247833c.d: /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/lib.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/zeroable.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/pod.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/contiguous.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/offset_of.rs /home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/transparent.rs
+
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/lib.rs:
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/zeroable.rs:
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/pod.rs:
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/contiguous.rs:
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/offset_of.rs:
+/home/anthony/.cargo/registry/src/github.com-1ecc6299db9ec823/bytemuck-1.7.3/src/transparent.rs:
