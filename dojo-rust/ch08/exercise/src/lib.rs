@@ -2,23 +2,30 @@
 pub mod text_interface {
     use std::collections::HashMap;
 
-    pub struct Interface; 
-
-    impl Interface {
-
-        pub fn add(&self, name: &str, department: &str) -> HashMap<String, Vec<String>> {
-            let mut map = HashMap::new();
-            let mut employee_list = Vec::new();
-            employee_list.push(name.to_string());
-            map.entry(department.to_string()).or_insert(employee_list);
-            if map.contains_key(department) {
-                map.get_mut(&department.to_string()).unwrap().push(name.to_string())
-            }
-            map
-        }
-        
+    pub struct EmployeeInterface {
+        departments: HashMap<String, Vec<String>>
     }
+
+    impl EmployeeInterface {
         
+        pub fn new() -> Self {
+            Self {
+                departments: HashMap::new()
+            }
+        }
+
+        pub fn add(&mut self, name: &str, department: &str) {
+            let department = department.to_lowercase();
+            let name = name.to_lowercase();
+            let employees = self.departments.entry(department).or_insert(Vec::new());
+            employees.push(name);
+        }
+
+        pub fn departments(&self) -> HashMap<String, Vec<String>> {
+            self.departments.clone() 
+        }
+
+    }
 }
 
 pub mod average {
@@ -70,17 +77,19 @@ pub mod pig_latin {
 
 mod tests_employee_department {
     use super::text_interface::*;
+    use std::collections::HashMap;
 
     #[test]
     fn test_add_employee() {
-        
-        let mut inter = Interface{};
-        inter.add("John", "Sales");
-        inter.add("Jane", "Marketing");
-        inter.add("Joe", "UI");
-        let r1 = inter.add("Wick", "UI");
+        let mut roster = EmployeeInterface::new();
 
-        println!("{:?}", r1);
+        roster.add("Jane", "Sales");
+        roster.add("Mark", "Sales");
+        roster.add("Bob", "Sales");
+        roster.add("Zack", "UI");
+        roster.add("Anthony", "Programmer");
+
+        println!("{:?}", roster.departments());
 
     }
 }
