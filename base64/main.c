@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define BUFFER 40
+
 const char *ascii_to_binary(const char *ascii) {
     switch (*ascii) {
         case 'a':
@@ -61,9 +63,9 @@ const char *ascii_to_binary(const char *ascii) {
     return "";
 }
 
-void print(char arr[42][6]) {
+void print(char arr[BUFFER][6]) {
         printf("[");
-        for (int i = 1; i < 42; i++) {
+        for (int i = 0; i < BUFFER; i++) {
                 printf("[");
                 for (int j = 0; j < 6; j++) {
                         printf("%c", arr[i][j]);
@@ -73,25 +75,39 @@ void print(char arr[42][6]) {
         printf("]");
 }
 
+char *str_slice(int *buffer, int start, int step, int end) {
+        char *buffer;
+        for (int i = start; i < end; i += step) {
+               buffer[i] 
+        }
+        return buffer;
+}
+
 char *base64(const char *input) {
-    char binary[42];
+    char binary[BUFFER] = {};
+    char bits[BUFFER][6];
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
     }
 
     // 3. divide into 4 groups 
-    char bit_groups[42][6];     
-
-    for (size_t i = 1; i < (sizeof(binary)/sizeof(binary[0])); i++) {
-        for (int j = 0; j < 6; j++) {
-            bit_groups[i][j] = binary[j];
+    for (int i = 0; i < BUFFER; i++) {
+        for (int j = 0; j < BUFFER; j++) {
+                bits[i][j] = binary[j];
         }
     }
 
-    print(bit_groups);
     // 4. convert into base64
-
+    
+    //printf("[ ");
+    //for (int i = 1; i < BUFFER; i++) {
+    //    printf("%c", binary[i]);
+    //}
+    //printf(" ]\n");
+     
+    print(bits);
+    
     return ""; 
 }
 
