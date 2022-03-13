@@ -61,24 +61,44 @@ const char *ascii_to_binary(const char *ascii) {
     return "";
 }
 
+void print(char arr[42][6]) {
+        printf("[");
+        for (int i = 1; i < 42; i++) {
+                printf("[");
+                for (int j = 0; j < 6; j++) {
+                        printf("%c", arr[i][j]);
+                }
+                printf("]\n");
+        }
+        printf("]");
+}
+
 char *base64(const char *input) {
-    char binary[10000];
+    char binary[42];
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
     }
+
     // 3. divide into 4 groups 
-    
+    char bit_groups[42][6];     
+
+    for (size_t i = 1; i < (sizeof(binary)/sizeof(binary[0])); i++) {
+        for (int j = 0; j < 6; j++) {
+            bit_groups[i][j] = binary[j];
+        }
+    }
+
+    print(bit_groups);
     // 4. convert into base64
 
-    printf("%s", binary);
     return ""; 
 }
 
 int main(void) {
         printf("%s\n", base64("hello"));
         
-        assert(!strcmp("YQ==", base64("a")));
+        //assert(!strcmp("YQ==", base64("a")));
         //assert(strcmp("aGVsbG8=", base64("hello")));
         //assert(strcmp("Z29vZGJ5ZQ==", base64("goodbye")));
         //assert(strcmp("SGVsbG8sIFdvcmxkIQ==", base64("Hello, World!")));
