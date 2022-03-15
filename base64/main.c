@@ -2,8 +2,66 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define BUFFER 40
+#define INVALID -1
+
+const char BASE64_ENCODER_LUT[] = {
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z'
+};
+
 
 const char *ascii_to_binary(const char *ascii) {
     switch (*ascii) {
@@ -63,52 +121,59 @@ const char *ascii_to_binary(const char *ascii) {
     return "";
 }
 
-void print(char arr[BUFFER][6]) {
-        printf("[");
-        for (int i = 0; i < BUFFER; i++) {
-                printf("[");
-                for (int j = 0; j < 6; j++) {
-                        printf("%c", arr[i][j]);
-                }
-                printf("]\n");
-        }
-        printf("]");
+/**
+ * Slice string from start to end.
+ *
+ * @param buffer - copy characters from buffer into `result`.
+ * @param start - index to start at.
+ * @param end - index to end at.
+ *
+ * @return the sliced string
+ */
+char *str_slice(char *buffer, int start, int end) {
+    char *result = malloc(4 * sizeof(buffer));
+    strncpy(result, buffer + start, end);
+    return result;
 }
 
-char *str_slice(int *buffer, int start, int step, int end) {
-        char *buffer;
-        for (int i = start; i < end; i += step) {
-               buffer[i] 
+/**
+ * Convert Base 2 to Base 10.
+ * 
+ * @param input the binary number as a char string.
+ * @return the decimal equivalent of the binary number.
+ */
+int convert(const char *input) {
+    int sum = 0;
+    for (size_t i = strlen(input); i > 0; i--) {
+        if (input[i-1] != *"0" && input[i-1] != *"1") {
+            return INVALID;
         }
-        return buffer;
+        size_t rev_i = strlen(input)-i; // count from 0 to len(input)
+        if (input[i-1] == *"0") {
+            continue;
+        }
+        sum += pow(2, rev_i);
+    }
+    return sum;
 }
 
-char *base64(const char *input) {
+static char *base64(const char *input) {
+        
+    static char result[] = "";
+
     char binary[BUFFER] = {};
-    char bits[BUFFER][6];
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
     }
-
-    // 3. divide into 4 groups 
-    for (int i = 0; i < BUFFER; i++) {
-        for (int j = 0; j < BUFFER; j++) {
-                bits[i][j] = binary[j];
-        }
+    
+    for (int i = 0; i < BUFFER; i += 6) {
+        char *slice = str_slice(binary, i, 6);
+        int base64_decimal = convert(slice);
+        strncat(result, &BASE64_ENCODER_LUT[base64_decimal], 1);
     }
 
-    // 4. convert into base64
-    
-    //printf("[ ");
-    //for (int i = 1; i < BUFFER; i++) {
-    //    printf("%c", binary[i]);
-    //}
-    //printf(" ]\n");
-     
-    print(bits);
-    
-    return ""; 
+    return result; 
 }
 
 int main(void) {
