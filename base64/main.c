@@ -7,61 +7,16 @@
 #define BUFFER 40
 #define INVALID -1
 
-const char BASE64_ENCODER_LUT[] = {
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z'
+const char BASE64_ENCODER_LUT[65] = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
+        'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 
+        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 
+        'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
+        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 
+        't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', 
+        '2', '3', '4', '5', '6', '7', '8', '9', '+', 
+        '/', '=', 
 };
-
 
 const char *ascii_to_binary(const char *ascii) {
     switch (*ascii) {
@@ -117,6 +72,8 @@ const char *ascii_to_binary(const char *ascii) {
             return "01111001";
         case 'z':
             return "01111010";
+        case 'M':
+            return "01001101";
     }
     return "";
 }
@@ -131,7 +88,7 @@ const char *ascii_to_binary(const char *ascii) {
  * @return the sliced string
  */
 char *str_slice(char *buffer, int start, int end) {
-    char *result = malloc(4 * sizeof(buffer));
+    char *result = malloc(3 * sizeof(buffer));
     strncpy(result, buffer + start, end);
     return result;
 }
@@ -140,6 +97,7 @@ char *str_slice(char *buffer, int start, int end) {
  * Convert Base 2 to Base 10.
  * 
  * @param input the binary number as a char string.
+ *
  * @return the decimal equivalent of the binary number.
  */
 int convert(const char *input) {
@@ -161,13 +119,13 @@ static char *base64(const char *input) {
         
     static char result[] = "";
 
-    char binary[BUFFER] = {};
+    char *binary = malloc(sizeof(char) * strlen(input));
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
     }
-    
-    for (int i = 0; i < BUFFER; i += 6) {
+
+    for (int i = 0; i < (int)strlen(binary); i += 6) {
         char *slice = str_slice(binary, i, 6);
         int base64_decimal = convert(slice);
         strncat(result, &BASE64_ENCODER_LUT[base64_decimal], 1);
@@ -177,8 +135,8 @@ static char *base64(const char *input) {
 }
 
 int main(void) {
-        printf("%s\n", base64("hello"));
         
+        assert(!strcmp("TWFu", base64("Man")));
         //assert(!strcmp("YQ==", base64("a")));
         //assert(strcmp("aGVsbG8=", base64("hello")));
         //assert(strcmp("Z29vZGJ5ZQ==", base64("goodbye")));
