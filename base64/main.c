@@ -119,7 +119,7 @@ static char *base64(const char *input) {
         
     static char result[] = "";
 
-    char *binary = malloc(sizeof(char) * strlen(input));
+    char *binary = malloc(100 * sizeof(char) * strlen(input));
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
@@ -127,6 +127,13 @@ static char *base64(const char *input) {
 
     for (int i = 0; i < (int)strlen(binary); i += 6) {
         char *slice = str_slice(binary, i, 6);
+        
+        if (strlen(slice) < 6 ) {
+            while (strlen(slice) - 6 != 0)  {
+                strcat(slice, "0");
+            }
+        }
+
         int base64_decimal = convert(slice);
         strncat(result, &BASE64_ENCODER_LUT[base64_decimal], 1);
     }
@@ -135,10 +142,11 @@ static char *base64(const char *input) {
 }
 
 int main(void) {
+        printf("%s\n", base64("hello"));
         
-        assert(!strcmp("TWFu", base64("Man")));
+        //assert(!strcmp("TWFu", base64("Man")));
+        //assert(!strcmp("aGVsbG8=", base64("hello")));
         //assert(!strcmp("YQ==", base64("a")));
-        //assert(strcmp("aGVsbG8=", base64("hello")));
         //assert(strcmp("Z29vZGJ5ZQ==", base64("goodbye")));
         //assert(strcmp("SGVsbG8sIFdvcmxkIQ==", base64("Hello, World!")));
 
