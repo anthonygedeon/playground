@@ -120,6 +120,8 @@ static char *base64(const char *input) {
     static char result[] = "";
 
     char *binary = malloc(100 * sizeof(char) * strlen(input));
+        
+    int counter = 0;
 
     for (const char *i = input; *i != '\0'; i++) {
         strcat(binary, ascii_to_binary(i));
@@ -127,7 +129,14 @@ static char *base64(const char *input) {
 
     for (int i = 0; i < (int)strlen(binary); i += 6) {
         char *slice = str_slice(binary, i, 6);
+        counter++;
         
+        if counter == 4 {
+                
+        } else if {
+
+        }
+
         if (strlen(slice) < 6 ) {
             while (strlen(slice) - 6 != 0)  {
                 strcat(slice, "0");
