@@ -132,7 +132,7 @@ static char *base64(const char *input) {
         counter++;
         
         if counter == 4 {
-                
+                counter = 0;                
         } else if {
 
         }
