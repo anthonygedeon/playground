@@ -72,8 +72,84 @@ const char *ascii_to_binary(const char *ascii) {
             return "01111001";
         case 'z':
             return "01111010";
+        case 'A':
+            return "01000001";
+        case 'B':
+            return "01000010";
+        case 'C':
+            return "01000011";
+        case 'D':
+            return "01000100";
+        case 'E':
+            return "01000101";
+        case 'F':
+            return "01000110";
+        case 'G':
+            return "01000111";
+        case 'H':
+            return "01001000";
+        case 'I':
+            return "01001001";
+        case 'J':
+            return "01001010";
+        case 'K':
+            return "01001011";
+        case 'L':
+            return "01001100";
         case 'M':
             return "01001101";
+        case 'N':
+            return "01001110";
+        case 'O':
+            return "01001111";
+        case 'P':
+            return "01010000";
+        case 'Q':
+            return "01010001";
+        case 'R':
+            return "01010010";
+        case 'S':
+            return "01010011";
+        case 'T':
+            return "01010100";
+        case 'U':
+            return "01010101";
+        case 'V':
+            return "01010110";
+        case 'W':
+            return "01010111";
+        case 'X':
+            return "01011000";
+        case 'Y':
+            return "01011001";
+        case 'Z':
+            return "01011010";
+        case '0':
+            return "00110000";
+        case '1':
+            return "00110001";
+        case '2':
+            return "00110010";
+        case '3':
+            return "00110011";
+        case '4':
+            return "00110100";
+        case '5':
+            return "00110101";
+        case '6':
+            return "00110110";
+        case '7':
+            return "00110111";
+        case '8':
+            return "00111000";
+        case '9':
+            return "00111001";
+        case ',':
+             return "00101100";
+        case ' ':
+             return "00100000";
+        case '!':
+             return "00100001";
     }
     return "";
 }
@@ -88,7 +164,7 @@ const char *ascii_to_binary(const char *ascii) {
  * @return the sliced string
  */
 char *str_slice(char *buffer, int start, int end) {
-    char *result = malloc(3 * sizeof(buffer));
+    char *result = malloc(10 * sizeof(buffer));
     strncpy(result, buffer + start, end);
     return result;
 }
@@ -115,9 +191,9 @@ int convert(const char *input) {
     return sum;
 }
 
-static char *base64(const char *input) {
+char *base64(const char *input) {
         
-    static char result[] = "";
+    char *result = malloc(1000 * sizeof(char) * strlen(input));
 
     char *binary = malloc(100 * sizeof(char) * strlen(input));
         
@@ -131,11 +207,9 @@ static char *base64(const char *input) {
         char *slice = str_slice(binary, i, 6);
         counter++;
         
-        if counter == 4 {
+        if (counter == 4) {
                 counter = 0;                
-        } else if {
-
-        }
+        } 
 
         if (strlen(slice) < 6 ) {
             while (strlen(slice) - 6 != 0)  {
@@ -147,17 +221,22 @@ static char *base64(const char *input) {
         strncat(result, &BASE64_ENCODER_LUT[base64_decimal], 1);
     }
 
-    return result; 
+    if (counter != 0) {
+        for (int i = 0;  i < (4 - counter); i++) {
+                strcat(result, "=");
+        }
+    }
+    
+    return result;
 }
 
 int main(void) {
-        printf("%s\n", base64("hello"));
-        
-        //assert(!strcmp("TWFu", base64("Man")));
-        //assert(!strcmp("aGVsbG8=", base64("hello")));
-        //assert(!strcmp("YQ==", base64("a")));
-        //assert(strcmp("Z29vZGJ5ZQ==", base64("goodbye")));
-        //assert(strcmp("SGVsbG8sIFdvcmxkIQ==", base64("Hello, World!")));
+
+        assert(!strcmp("TWFu", base64("Man")));
+        assert(!strcmp("aGVsbG8=", base64("hello")));
+        assert(!strcmp("YQ==", base64("a")));
+        assert(!strcmp("Z29vZGJ5ZQ==", base64("goodbye")));
+        assert(!strcmp("SGVsbG8sIFdvcmxkIQ==", base64("Hello, World!")));
 
         return 0;
 }
