@@ -18,6 +18,9 @@ const char BASE64_ENCODER_LUT[65] = {
         '/', '=', 
 };
 
+/**
+ *
+ */
 const char *ascii_to_binary(const char *ascii) {
     switch (*ascii) {
         case 'a':
@@ -191,6 +194,9 @@ int convert(const char *input) {
     return sum;
 }
 
+/**
+ *
+ */
 char *base64(const char *input) {
         
     char *result = malloc(1000 * sizeof(char) * strlen(input));
