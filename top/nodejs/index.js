@@ -1,14 +1,22 @@
-const http = require("http");
+const https = require("https");
 
-const port = process.env.PORT || 3000;
+const options = {
+        hostname: "example.com",
+        port: 443, 
+        path: "/todos",
+        method: "GET", 
+};
 
-const server = http.createServer((req, res) => {
-        console.log(req.method);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/html');
-        res.end('<h1>Hello, World!</h1>')
+const req = https.request(options, res => {
+    console.log(`status code: ${res.statusCode}`);
+
+    res.on('data', d => {
+        process.stdout.write(d);
+    });
 });
 
-server.listen(port, () => {
-    console.log(`listening on port: ${port}`);
+req.on("error", error => {
+        console.log(error);
 });
+
+req.end();
