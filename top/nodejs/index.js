@@ -1,31 +1,35 @@
-const https = require("https");
+const fs = require("fs");
+const path = require("path");
 
-const data = JSON.stringify({
-    todo: "Buy the milk"
-});
+const fileName = `${__dirname}/test.txt`;
 
-const options = {
-        hostname: "whatever.com", 
-        port: 443, 
-        path: "/todos", 
-        method: "POST", 
-        headers: {
-            "Content-Type": "application/json", 
-            "Content-Length": data.length, 
+// callback hell
+fs.readFile(fileName, "utf8", (err, data) => {
+    if (err) {
+        console.log(err);
+        return;
+    }
+
+    console.log(data);
+
+    const content = "some content!";
+
+    fs.writeFile(fileName, content, err2 => {
+        if (err2) {
+            console.log(err2);
+            return;
         }
-};
 
-const req = https.request(options, res => {
-    console.log(`status code: ${res.statusCode}`);
+        console.log("write some content!");
 
-    res.on("data", d => {
-        process.stdout.write(d);
-    });
+        fs.readFile(fileName, "utf8", (err3, data3) => {
+            if (err3) {
+                console.log(err3);
+                return;
+            }
+
+            console.log(data3);
+        })
+    })
 });
 
-req.on("error", error => {
-        console.log(error);
-})
-
-req.write(data);
-req.end();
