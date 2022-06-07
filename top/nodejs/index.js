@@ -1,21 +1,11 @@
-const fs = require("fs/promises");
+const fs = require("fs");
+const path = require("path");
 
-async function example() {
-    const fileName = `${__dirname}/test.txt`;
+const content = "Some content!";
 
-    try {
-        const data = await fs.readFile(fileName, "utf8");
-        console.log(data);
+fs.writeFile(path.join(__dirname, "test.txt"), content, err => {
+        if (err) {
+                console.error(err);
+        }
 
-        const content = "My booboo hit the floor";
-        await fs.writeFile(fileName, content);
-        console.log("Wrote some content");
-
-        const newData = await fs.readFile(fileName, "utf8");
-        console.log(newData);
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-example();
+})
