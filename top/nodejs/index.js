@@ -3,12 +3,17 @@ const path = require("path");
 const url = require("node:url");
 const http = require("http");
 
-const port = process.env.PORT || 3000;
-const host = "127.0.0.1";
+const PORT = process.env.PORT || 3000;
+const HOST = "127.0.0.1";
 
-async function handleRequest(res, document) {
-    let fileData = await fs.readFile(path.join(__dirname, document), {encoding: "utf8"});
-    res.write(fileData);
+/** Handles the request from the web server and serves the correct html document.
+ * @param res - the response object from the web server.
+ * @param doc - the HTML document that will be served back to the web
+ * server.
+ */
+async function handleRequest(res, doc) {
+    let data = await fs.readFile(path.join(__dirname, doc), {encoding: "utf8"});
+    res.write(data);
     res.end();
 }
 
@@ -16,10 +21,8 @@ const server = http.createServer(async (req, res) => {
 
     const uri = new URL(req.url, `http://${req.headers.host}`);
 
-    res.writeHead(200, {
-        "Content-Type": "text/html", 
-    });
-    let fileData;
+    res.writeHead(200, { "Content-Type": "text/html" });
+
     switch(uri.pathname) {
         case "/":
             handleRequest(res, "index.html").catch((err) => console.error(err));
@@ -36,7 +39,7 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
-server.listen(port, host, () => {
-    console.log(`listening on port: ${port} on host: ${host}`);
+server.listen(PORT, HOST, () => {
+    console.log(`listening on port: ${PORT} on host: ${HOST}`);
 })
 
