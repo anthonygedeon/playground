@@ -1,0 +1,3 @@
+[submodule "learncpp-course/plog"]
+	path = learncpp-course/plog
+	url = https://github.com/SergiusTheBest/plog.git
