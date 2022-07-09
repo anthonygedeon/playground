@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 
-std::string dec_to_bin(std::uint8_t num);
+int dec_to_bin(std::uint8_t num);
 
 int main() {
 	std::cout << "Enter a number between 0 - 255: ";
@@ -13,37 +13,34 @@ int main() {
 	if (bin < 0 || bin > 255) return -1;
 	std::cin >> bin;
 	
-	std::string result{ dec_to_bin(bin) };
+	int b_1{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_2{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_3{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_4{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_5{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_6{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_7{ dec_to_bin(bin) };
+	bin /= 2;
+	int b_8{ dec_to_bin(bin) };
 
-	std::cout << result << '\n';
-
+	std::cout << b_8;	
+	std::cout << b_7;	
+	std::cout << b_6;	
+	std::cout << b_5 << ' ';	
+	std::cout << b_4;	
+	std::cout << b_3;	
+	std::cout << b_2;	
+	std::cout << b_1;	
+	std::cout << '\n';
 	return 0;
 }
 
-std::string dec_to_bin(std::uint8_t num) {
-	// if (num % 2 != 0) then
-	// remainder = divide num / 2
-	// add bit to string
-
-	// return string.reverse()
-
-	std::string binary{};
-
-	while (num > 0) {
-		if (num % 2 != 0) {
-			binary.push_back('1');
-		} else {
-			binary.push_back('0');
-		}
-		num /= 2;
-	}
-
-
-	for (int i = binary.length(); i < 8; i++) {
-		binary += "0";
-	}
-
-	std::reverse(binary.rbegin(), binary.rend());
-
-	return binary;
+int dec_to_bin(std::uint8_t num) {
+	return num % 2 ? 1 : 0;
 }
