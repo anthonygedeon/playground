@@ -1,22 +1,35 @@
+#include "ls-6.2.circle.h" 
+#include "ls-6.2.growth.h" 
+
 #include <iostream>
 
-void print() // this print lives in the global namespace
-{
-	std::cout << " there\n";
+int add(int x, int y) {			
+	return x + y;
 }
 
-namespace foo
-{
-	void print() // this print lives in the foo namespace
-	{
-		std::cout << "Hello";
+namespace foo {
+
+	int add(int x, int y) {
+		return ::add(x, y);
 	}
+}
+
+namespace foo::goo {
+
+	int add(int x, int y) {
+		return x + y;
+	}
+
 }
 
 int main()
 {
-	foo::print(); // call print() in foo namespace
-	::print(); // call print() in global namespace (same as just calling print() in this case)
+	namespace mathstuff = foo::goo;
+
+	std::cout << basic_math::pi << '\n';
+	std::cout << basic_math::e << '\n';
+	std::cout << mathstuff::add(5, 5) << '\n';
+	std::cout << foo::add(5, 5) << '\n';
 
 	return 0;
 }
