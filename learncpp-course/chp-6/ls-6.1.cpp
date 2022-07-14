@@ -17,6 +17,10 @@ int main() { // 1
 
 	std::cout << value << '\n';
 
+	{
+		// code...		
+	}
+
 	if (1) { // 1
 		if (1) { // 2
 			if (1) { //3 
