@@ -26,10 +26,15 @@ double get_gravity() {
 	return constants::gravity;
 }
 
+double instant_velocity(int time, double gravity) {
+	return gravity * time;
+}
+
 int main() {
 	std::cout << constants::gravity << '\n';
 	std::cout << constants_2::gravity << '\n';
 	std::cout << get_gravity() << '\n';
+	std::cout << instant_velocity(5, constants::gravity) << '\n';
 	
 	std::cout << g_x << ' ' << g_y << '\n';
 }
