@@ -14,6 +14,22 @@ int inity() {
 	return 5;
 }
 
+namespace constants {
+	constexpr double gravity { 9.8 };
+}
+
+namespace constants_2 {
+	extern const double gravity { 9.8 };
+}
+
+double get_gravity() {
+	return constants::gravity;
+}
+
 int main() {
+	std::cout << constants::gravity << '\n';
+	std::cout << constants_2::gravity << '\n';
+	std::cout << get_gravity() << '\n';
+	
 	std::cout << g_x << ' ' << g_y << '\n';
 }
