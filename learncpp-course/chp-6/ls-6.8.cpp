@@ -1,20 +1,19 @@
 #include <iostream>
 
-int g_mode{};
+int initx();
+int inity();
 
-void do_something() {
-	g_mode = 10;
+int g_x{ initx() };
+int g_y{ inity() };
+
+int initx() {
+	return g_y;
+}
+
+int inity() {
+	return 5;
 }
 
 int main() {
-	g_mode = 1;
-	
-	do_something();
-
-	   if (g_mode == 1)
-        std::cout << "No threat detected.\n";
-    else
-        std::cout << "Launching nuclear missiles...\n";
-
-	return 0;
+	std::cout << g_x << ' ' << g_y << '\n';
 }
