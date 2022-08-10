@@ -4,6 +4,8 @@ from typing import Final
 MARGIN: Final = 15
 pygame.init()
 
+pygame.display.set_caption("Pong")
+
 size = width, height = 640, 480
 
 screen = pygame.display.set_mode(size)
@@ -21,7 +23,8 @@ class Ball:
         self.center_pos = ((width-Ball.WIDTH) // 2),  ((height - Ball.HEIGHT)//2)
 
         self.rect = pygame.Rect(self.center_pos, (Ball.WIDTH, Ball.HEIGHT))
-
+        
+        self.pos = pygame.Vector2(self.center_pos)
         self.vel = pygame.Vector2(0, 0)
 
         self.surface = pygame.Surface((Ball.WIDTH, Ball.HEIGHT))
@@ -38,10 +41,10 @@ class Ball:
         self.vel = pygame.Vector2(0, 0)
 
     def update(self):
-        pass
+        self.pos.y += self.vel.y
+        self.pos.x += self.vel.x
 
     def draw(self, screen):
-        self.rect.move_ip(self.vel)
         screen.blit(self.surface, self.rect)
 
 class Paddle:
@@ -53,7 +56,7 @@ class Paddle:
         middle_pos = ((height - Paddle.HEIGHT)//2)
 
         self.pos = pygame.Vector2(x, middle_pos)
-        self.vec = pygame.Vector2(0, 0)
+        self.vel = pygame.Vector2(0, 15)
 
         # set the initial positon of the paddle
         self.rect = pygame.Rect(self.pos, (Paddle.WIDTH, Paddle.HEIGHT))
@@ -61,11 +64,22 @@ class Paddle:
         self.surface = pygame.Surface((Paddle.WIDTH, Paddle.HEIGHT))
         self.surface.fill(fill)
 
+    def update(self):
+        self.pos.y += self.vel.y
+
     def draw(self, screen):
-        self.rect.move_ip((0, self.vec.y))
         screen.blit(self.surface, self.rect)
 
+class Game:
+    
+    def __init__(self):
+        pass
+
+    def run(self):
+        pass
+
 def main():
+    
 
     pong_ball    = Ball(Color.WHITE)
     left_paddle  = Paddle(MARGIN, 0, Color.WHITE)
@@ -78,13 +92,13 @@ def main():
                     sys.exit()
                 case pygame.KEYDOWN:
                     if (event.key == pygame.K_UP):
-                        left_paddle.vec.y = -1
+                        left_paddle.pos.y = -1
                     if (event.key == pygame.K_DOWN):
-                        left_paddle.vec.y = 1
+                        left_paddle.pos.y = 1
                     if (event.key == pygame.K_w):
-                        right_paddle.vec.y = -1
+                        right_paddle.pos.y = -1
                     if (event.key == pygame.K_s):
-                        right_paddle.vec.y = 1
+                        right_paddle.pos.y = 1
 
         # TODO: Handle collision better with left_paddles and screen
         # TODO: DRY duplicated code
@@ -115,6 +129,11 @@ def main():
         left_paddle.draw(screen)
         pong_ball.draw(screen)
         right_paddle.draw(screen)
+        
+        left_paddle.update()
+        right_paddle.update()
+        pong_ball.update()
+
         pygame.display.flip()
 
 if __name__ == "__main__":
