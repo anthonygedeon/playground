@@ -24,7 +24,7 @@ class Ball:
         self.center_pos = ((Game.WINDOW_WIDTH-Ball.WIDTH) // 2),  ((Game.WINDOW_HEIGHT- Ball.HEIGHT)//2)
         
         self.pos = pygame.Vector2(self.center_pos)
-        self.vel = pygame.Vector2(1, 1)
+        self.vel = pygame.Vector2(0.2, 0.2)
 
         self.rect = pygame.Rect(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
@@ -32,26 +32,27 @@ class Ball:
         self.surface.fill(fill)
         
     def _go_left(self):
-        self.pos.x -= (-1 * self.vel.x)
+        self.vel.x = -0.2
 
     def _go_right(self):
-        self.pos.x += self.vel.x
+        self.vel.x = 0.2
 
     def _go_up(self):
-        pass
+        self.vel.y = 0.2
 
     def _go_down(self):
-        pass
+        self.vel.y = -0.2
 
     def reset(self):
+        self.pos = pygame.Vector2(self.center_pos)
         self.rect.update(self.center_pos, (Ball.WIDTH, Ball.HEIGHT))
-        self.vel = pygame.Vector2(0, 0)
 
     def update(self):
         if (self.rect.right >= Game.WINDOW_WIDTH):
-            self._go_left()
-        else:
-            self._go_right()
+            self.reset()
+        if (self.rect.left <= 0): 
+            self.reset()
+        self.pos.x += self.vel.x 
 
         self.rect.update(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
@@ -192,6 +193,12 @@ class Game:
                 self.left_paddle.move_up()
             if (self.event_m.buffer[KeyCode.key_s]):
                 self.left_paddle.move_down()
+
+            if (self.pong_ball.rect.colliderect(self.left_paddle.rect)):
+                self.pong_ball._go_right()
+
+            if (self.pong_ball.rect.colliderect(self.right_paddle.rect)):
+                self.pong_ball._go_left()
 
             self.update()
 
