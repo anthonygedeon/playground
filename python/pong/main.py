@@ -24,7 +24,7 @@ class Ball:
         self.center_pos = ((Game.WINDOW_WIDTH-Ball.WIDTH) // 2),  ((Game.WINDOW_HEIGHT- Ball.HEIGHT)//2)
         
         self.pos = pygame.Vector2(self.center_pos)
-        self.vel = pygame.Vector2(0.2, 0.2)
+        self.vel = pygame.Vector2(0.1, 0.1)
 
         self.rect = pygame.Rect(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
@@ -32,16 +32,16 @@ class Ball:
         self.surface.fill(fill)
         
     def _go_left(self):
-        self.vel.x = -0.2
+        self.vel.x = -0.1
 
     def _go_right(self):
-        self.vel.x = 0.2
+        self.vel.x = 0.1
 
     def _go_up(self):
-        self.vel.y = 0.2
+        self.vel.y = -0.1
 
     def _go_down(self):
-        self.vel.y = -0.2
+        self.vel.y = 0.1
 
     def reset(self):
         self.pos = pygame.Vector2(self.center_pos)
@@ -52,7 +52,15 @@ class Ball:
             self.reset()
         if (self.rect.left <= 0): 
             self.reset()
+        if (self.rect.top <= 0):
+            self._go_down()
+        if (self.rect.bottom >= Game.WINDOW_HEIGHT):
+            self._go_up()
+
         self.pos.x += self.vel.x 
+        self.pos.y += self.vel.y
+
+        print(self.pos)
 
         self.rect.update(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
