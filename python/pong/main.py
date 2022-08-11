@@ -60,6 +60,9 @@ class Ball:
 
 class EventManager:
 
+    class State(IntEnum):
+        on, off = 1, 0
+
     def __init__(self):
         self.buffer: list[int] = [0, 0, 0, 0]
 
@@ -74,7 +77,7 @@ class EventManager:
             
             This will keep track of what keycodes are pressed
         """
-        self.buffer[KeyCode] = 1
+        self.buffer[KeyCode] = EventManager.State.on
 
     def handle_keyup(self, KeyCode):
         """When a key is pressed, update the state of the event buffer of index 'KeyCode' to 0
@@ -82,7 +85,7 @@ class EventManager:
             If the key is longer being pressed, reset the index of KeyCode back to 0 so we can handle the 
             state 
         """
-        self.buffer[KeyCode] = 0
+        self.buffer[KeyCode] = EventManager.State.off
 
 class Paddle:
     """"""
