@@ -1,10 +1,14 @@
-import sys, pygame
+import sys, time
 from enum import IntEnum
 from typing import Final, Optional
 
 import pygame as pg
 
 MARGIN: Final = 15
+
+pg.font.init()
+
+font = pg.font.Font("./fonts/bit5x3.ttf", 48)
 
 class KeyCode(IntEnum):
     key_up   = 0
@@ -41,36 +45,39 @@ class ScoreManager:
             return Player.two
         return None
 
+
 class Ball:
     """"""
     WIDTH:  Final = 14
     HEIGHT: Final = 14
 
+    _INITIAL_VELOCITY: Final = 0.1
+
     def __init__(self, fill):
         self.center_pos = ((Game.WINDOW_WIDTH-Ball.WIDTH) // 2),  ((Game.WINDOW_HEIGHT- Ball.HEIGHT)//2)
         
-        self.pos = pygame.Vector2(self.center_pos)
-        self.vel = pygame.Vector2(0.1, 0.1)
+        self.pos = pg.Vector2(self.center_pos)
+        self.vel = pg.Vector2(Ball._INITIAL_VELOCITY, Ball._INITIAL_VELOCITY)
 
-        self.rect = pygame.Rect(self.pos, (Ball.WIDTH, Ball.HEIGHT))
+        self.rect = pg.Rect(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
-        self.surface = pygame.Surface((Ball.WIDTH, Ball.HEIGHT))
+        self.surface = pg.Surface((Ball.WIDTH, Ball.HEIGHT))
         self.surface.fill(fill)
         
     def _go_left(self):
-        self.vel.x = -0.1
+        self.vel.x = (-1 * Ball._INITIAL_VELOCITY)
 
     def _go_right(self):
-        self.vel.x = 0.1
+        self.vel.x = Ball._INITIAL_VELOCITY
 
     def _go_up(self):
-        self.vel.y = -0.1
+        self.vel.y = (-1 * Ball._INITIAL_VELOCITY)
 
     def _go_down(self):
-        self.vel.y = 0.1
+        self.vel.y = Ball._INITIAL_VELOCITY
 
     def reset(self):
-        self.pos = pygame.Vector2(self.center_pos)
+        self.pos = pg.Vector2(self.center_pos)
         self.rect.update(self.center_pos, (Ball.WIDTH, Ball.HEIGHT))
 
     def update(self):
@@ -85,8 +92,6 @@ class Ball:
 
         self.pos.x += self.vel.x 
         self.pos.y += self.vel.y
-
-        print(self.pos)
 
         self.rect.update(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
