@@ -1,6 +1,8 @@
 import sys, pygame
 from enum import IntEnum
-from typing import Final
+from typing import Final, Optional
+
+import pygame as pg
 
 MARGIN: Final = 15
 
@@ -10,10 +12,34 @@ class KeyCode(IntEnum):
     key_w    = 2
     key_s    = 3
 
+class Player(IntEnum):
+    one, two = 1, 2
 
 class Color:
     BLACK: Final = 0, 0, 0
     WHITE: Final = 255, 255, 255
+
+class ScoreManager:
+    
+    __winning_score = 7
+
+    def __init__(self):
+        # score[0] => 1st Player
+        # score[1] => 2nd Player
+        self.score_board = [0, 0]
+    
+    def reset_score_board(self):
+        self.score_board = [0, 0]
+
+    def increment_score(self, player):
+        self.score_board[player] += 1
+
+    def get_winner(self) -> Optional[int]:
+        if (self.score_board[0] == ScoreManager.__winning_score):
+            return Player.one
+        elif (self.score_board[1] == ScoreManager.__winning_score):
+            return Player.two
+        return None
 
 class Ball:
     """"""
