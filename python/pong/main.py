@@ -6,6 +6,7 @@ import pygame as pg
 
 MARGIN: Final = 15
 
+
 pg.font.init()
 
 font = pg.font.Font("./fonts/bit5x3.ttf", 48)
@@ -18,10 +19,6 @@ class KeyCode(IntEnum):
 
 class Player(IntEnum):
     one, two = 1, 2
-
-class Color:
-    BLACK: Final = 0, 0, 0
-    WHITE: Final = 255, 255, 255
 
 class ScoreManager:
     
@@ -184,9 +181,9 @@ class Game:
 
         self.screen = pg.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
 
-        self.pong_ball    = Ball(Color.WHITE)
-        self.left_paddle  = Paddle(MARGIN, 0, Color.WHITE)
-        self.right_paddle = Paddle((Game.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, Color.WHITE)
+        self.pong_ball    = Ball(pg.Color("white"))
+        self.left_paddle  = Paddle(MARGIN, 0, pg.Color("white"))
+        self.right_paddle = Paddle((Game.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, pg.Color("white"))
 
         self.event_m = EventManager()
         self.score_m = ScoreManager()
@@ -197,13 +194,13 @@ class Game:
         self.pong_ball.update()
 
     def draw(self):
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(pg.Color("black"))
         self.left_paddle.draw(self.screen)
         self.pong_ball.draw(self.screen)
         self.right_paddle.draw(self.screen)
 
-        font_s_1 = font.render(str(self.score_m.score_board[0]), True, Color.WHITE)
-        font_s_2 = font.render(str(self.score_m.score_board[1]), True, Color.WHITE)
+        font_s_1 = font.render(str(self.score_m.score_board[0]), True, pg.Color("white"))
+        font_s_2 = font.render(str(self.score_m.score_board[1]), True, pg.Color("white"))
         self.screen.blit(font_s_1, pg.Rect(( 
             (Game.WINDOW_WIDTH // 2) - 48 - 12, 10), 
             (font_s_1.get_width(), font_s_1.get_height())))
