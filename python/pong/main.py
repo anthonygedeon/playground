@@ -171,12 +171,14 @@ class Game:
     WINDOW_WIDTH:  Final = 640
     WINDOW_HEIGHT: Final = 480
 
+    __paddle_sound = "hit_paddle.mp3"
+
     def __init__(self):
            
         pg.init()
         pg.mixer.init()
 
-        self.sound = pg.mixer.Sound("./sfx/hit_paddle.mp3")
+        self.sound = pg.mixer.Sound("./sfx/" + Game.__paddle_sound)
 
         pg.display.set_caption("Pong")
 
