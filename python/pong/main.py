@@ -135,13 +135,13 @@ class Paddle:
     def __init__(self, x, y, fill):
         _middle_y_position = ((Game.WINDOW_HEIGHT - Paddle.HEIGHT)//2)
 
-        self.pos = pygame.Vector2(x, _middle_y_position)
-        self.vel = pygame.Vector2(0, 15)
+        self.pos = pg.Vector2(x, _middle_y_position)
+        self.vel = pg.Vector2(0, 15)
 
         # set the initial positon of the paddle
-        self.rect = pygame.Rect(self.pos, (Paddle.WIDTH, Paddle.HEIGHT))
+        self.rect = pg.Rect(self.pos, (Paddle.WIDTH, Paddle.HEIGHT))
 
-        self.surface = pygame.Surface((Paddle.WIDTH, Paddle.HEIGHT))
+        self.surface = pg.Surface((Paddle.WIDTH, Paddle.HEIGHT))
         self.surface.fill(fill)
     
     def _colliding_with_screen(self):
@@ -173,17 +173,21 @@ class Game:
 
     def __init__(self):
            
-        pygame.init()
+        pg.init()
+        pg.mixer.init()
 
-        pygame.display.set_caption("Pong")
+        self.sound = pg.mixer.Sound("./sfx/hit_paddle.mp3")
 
-        self.screen = pygame.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
+        pg.display.set_caption("Pong")
+
+        self.screen = pg.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
 
         self.pong_ball    = Ball(Color.WHITE)
         self.left_paddle  = Paddle(MARGIN, 0, Color.WHITE)
         self.right_paddle = Paddle((Game.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, Color.WHITE)
 
         self.event_m = EventManager()
+        self.score_m = ScoreManager()
     
     def update(self):
         self.left_paddle.update()
@@ -195,32 +199,42 @@ class Game:
         self.left_paddle.draw(self.screen)
         self.pong_ball.draw(self.screen)
         self.right_paddle.draw(self.screen)
-        pygame.display.flip()
+
+        font_s_1 = font.render(str(self.score_m.score_board[0]), True, Color.WHITE)
+        font_s_2 = font.render(str(self.score_m.score_board[1]), True, Color.WHITE)
+        self.screen.blit(font_s_1, pg.Rect(( 
+            (Game.WINDOW_WIDTH // 2) - 48 - 12, 10), 
+            (font_s_1.get_width(), font_s_1.get_height())))
+        self.screen.blit(font_s_2, pg.Rect(( 
+            (Game.WINDOW_WIDTH // 2) - 48 + 86, 10), 
+            (font_s_2.get_width(), font_s_2.get_height())))
+
+        pg.display.flip()
 
     def run(self):
         while True:
-            for event in pygame.event.get():
+            for event in pg.event.get():
 
                 match event.type:
-                    case pygame.QUIT:
+                    case pg.QUIT:
                         sys.exit()
-                    case pygame.KEYDOWN:
-                        if (event.key == pygame.K_UP):
+                    case pg.KEYDOWN:
+                        if (event.key == pg.K_UP):
                             self.event_m.handle_keydown(KeyCode.key_up)
-                        if (event.key == pygame.K_DOWN):
+                        if (event.key == pg.K_DOWN):
                             self.event_m.handle_keydown(KeyCode.key_down)
-                        if (event.key == pygame.K_w):
+                        if (event.key == pg.K_w):
                             self.event_m.handle_keydown(KeyCode.key_w)
-                        if (event.key == pygame.K_s):
+                        if (event.key == pg.K_s):
                             self.event_m.handle_keydown(KeyCode.key_s)
-                    case pygame.KEYUP:
-                        if (event.key == pygame.K_UP):
-                            self.event_m.handle_keyup(KeyCode.key_up)
-                        if (event.key == pygame.K_DOWN):
+                    case pg.KEYUP:
+                        if (event.key == pg.K_UP):
+                            self.event_m.handle_keyup(KeyCode.key_up) 
+                        if (event.key == pg.K_DOWN):
                             self.event_m.handle_keyup(KeyCode.key_down)
-                        if (event.key == pygame.K_w):
+                        if (event.key == pg.K_w):
                             self.event_m.handle_keyup(KeyCode.key_w)
-                        if (event.key == pygame.K_s):
+                        if (event.key == pg.K_s):
                             self.event_m.handle_keyup(KeyCode.key_s)
             
             # TODO: How can we improve this code?
@@ -232,11 +246,14 @@ class Game:
                 self.left_paddle.move_up()
             if (self.event_m.buffer[KeyCode.key_s]):
                 self.left_paddle.move_down()
-
+            
+            # TODO: this function should not dictate the control of the ball, this should be done in the Ball class
             if (self.pong_ball.rect.colliderect(self.left_paddle.rect)):
+                self.sound.play()
                 self.pong_ball._go_right()
 
             if (self.pong_ball.rect.colliderect(self.right_paddle.rect)):
+                self.sound.play()
                 self.pong_ball._go_left()
 
             self.update()
