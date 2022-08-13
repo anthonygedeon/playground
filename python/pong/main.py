@@ -42,9 +42,12 @@ class ScoreManager:
     def reset_score_board(self):
         self.score_board = [0, 0]
 
-    def increment_score(self, player):
-        self.score_board[player] += 1
+    def increment_score(self, player: int):
+        self.score_board[player-1] += 1
 
+    def is_winner(self):
+        return self.score_board[0] == ScoreManager.__winning_score or self.score_board[1] == ScoreManager.__winning_score
+    
     def get_winner(self) -> Optional[int]:
         if (self.score_board[0] == ScoreManager.__winning_score):
             return Player.one
@@ -112,6 +115,11 @@ class Ball:
     def _go_down(self):
         self.vel.y = Ball._INITIAL_VELOCITY
 
+    def stop_ball(self):
+        self.vel.x = 0
+        self.vel.y = 0
+        self.pos = pg.Vector2(self.center_pos)
+
     def reset(self):
         self.pos = pg.Vector2(self.center_pos)
         self.rect.update(self.center_pos, (Ball.WIDTH, Ball.HEIGHT))
@@ -119,8 +127,12 @@ class Ball:
     def update(self):
         if (self.rect.right >= Game.WINDOW_WIDTH):
             self.reset()
+            score_m.increment_score(Player.one)
+            self._go_right()
         if (self.rect.left <= 0): 
             self.reset()
+            score_m.increment_score(Player.two)
+            self._go_left()
         if (self.rect.top <= 0):
             self._go_down()
         if (self.rect.bottom >= Game.WINDOW_HEIGHT):
