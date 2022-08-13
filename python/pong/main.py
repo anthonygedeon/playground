@@ -1,4 +1,5 @@
-import sys, time
+import sys
+import abc
 from enum import IntEnum
 from typing import Final, Optional
 
@@ -10,6 +11,15 @@ MARGIN: Final = 15
 pg.font.init()
 
 font = pg.font.Font("./fonts/bit5x3.ttf", 48)
+
+class SceneInterface(abc.ABC):
+    """Scenes are shown to the user and updates the surface according to what scene needs to be shown 
+        i.e the game menu, game over scene, or the main gameplay scene"""
+
+    @abc.abstractmethod
+    def show(self, screen):
+        """show 'this' to the user"""
+        pass
 
 class KeyCode(IntEnum):
     key_up   = 0
@@ -42,6 +52,35 @@ class ScoreManager:
             return Player.two
         return None
 
+score_m = ScoreManager()
+
+
+class SceneManager:
+    pass
+
+class MenuScene(SceneInterface):
+    
+    __text = {
+            "title_font"      : pg.font.Font("./fonts/bit5x3.ttf", 108), 
+            "subheading_font" : pg.font.Font("./fonts/bit5x3.ttf", 38),
+    }
+
+    def __init__(self):
+        self.surface = pg.Surface((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
+        self.surface.fill(pg.Color("black"))
+
+        self.title = "PONG" 
+        self.cta   = "PRESS ENTER TO PLAY"
+
+    def show(self, screen):
+        screen_title = MenuScene.__text["title_font"].render(self.title, True, pg.Color("white"))
+        screen_play = MenuScene.__text["subheading_font"].render(self.cta, True, pg.Color("white"))
+        screen.blit(screen_title, pg.Rect(((Game.WINDOW_WIDTH // 2)-60,60), (58, 58)))
+        screen.blit(screen_play, pg.Rect(((Game.WINDOW_WIDTH // 2)-140,Game.WINDOW_HEIGHT - 200), (58, 58)))
+
+class GameScene(SceneInterface):
+    def show(self, screen):
+        pass
 
 class Ball:
     """"""
