@@ -7,18 +7,34 @@ import pygame as pg
 
 MARGIN: Final = 15
 
-
+pg.init()
 pg.font.init()
+pg.mixer.init()
 
-font = pg.font.Font("./fonts/bit5x3.ttf", 48)
+fonts = {
+    "menu": {
+        "title": pg.font.Font("fonts/bit5x3.ttf", 108),
+        "cta":   pg.font.Font("fonts/bit5x3.ttf", 42)
+    },
+    "game": {
+        "score": pg.font.Font("fonts/bit5x3.ttf", 48), 
+        "reset": pg.font.Font("fonts/bit5x3.ttf", 54)
+    }
+}
 
-class SceneInterface(abc.ABC):
-    """Scenes are shown to the user and updates the surface according to what scene needs to be shown 
+sounds = {
+        "collision": {
+            "paddle": pg.mixer.Sound("sounds/hit_paddle.mp3")
+        }
+}
+
+class ScreenInterface(abc.ABC):
+    """Screen are shown to the user and updates the surface according to what scene needs to be shown 
         i.e the game menu, game over scene, or the main gameplay scene"""
 
     @abc.abstractmethod
     def show(self, screen):
-        """show 'this' to the user"""
+        """what to show to the user"""
         pass
 
 class KeyCode(IntEnum):
@@ -46,74 +62,60 @@ class ScoreManager:
         self.score_board[player-1] += 1
 
     def is_winner(self):
-        return self.score_board[0] == ScoreManager.__winning_score or self.score_board[1] == ScoreManager.__winning_score
+        return self.score_board[0] == self.__winning_score or self.score_board[1] == self.__winning_score
     
     def get_winner(self) -> Optional[int]:
-        if (self.score_board[0] == ScoreManager.__winning_score):
+        if (self.score_board[0] == self.__winning_score):
             return Player.one
-        elif (self.score_board[1] == ScoreManager.__winning_score):
+        elif (self.score_board[1] == self.__winning_score):
             return Player.two
         return None
 
 score_m = ScoreManager()
 
-
-class SceneManager:
-    pass
-
-class MenuScene(SceneInterface):
-    
-    __text = {
-            "title_font"      : pg.font.Font("./fonts/bit5x3.ttf", 108), 
-            "subheading_font" : pg.font.Font("./fonts/bit5x3.ttf", 38),
-    }
+class MenuScreen(ScreenInterface):
 
     def __init__(self):
-        self.surface = pg.Surface((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
+        self.surface = pg.Surface((App.WINDOW_WIDTH, App.WINDOW_HEIGHT))
         self.surface.fill(pg.Color("black"))
 
-        self.title = "PONG" 
-        self.cta   = "PRESS ENTER TO PLAY"
+        self.title = "pong".upper()
+        self.cta   = "press enter to play".upper()
 
     def show(self, screen):
-        screen_title = MenuScene.__text["title_font"].render(self.title, True, pg.Color("white"))
-        screen_play = MenuScene.__text["subheading_font"].render(self.cta, True, pg.Color("white"))
-        screen.blit(screen_title, pg.Rect(((Game.WINDOW_WIDTH // 2)-60,60), (58, 58)))
-        screen.blit(screen_play, pg.Rect(((Game.WINDOW_WIDTH // 2)-140,Game.WINDOW_HEIGHT - 200), (58, 58)))
-
-class GameScene(SceneInterface):
-    def show(self, screen):
-        pass
+        screen_title = fonts["menu"]["title"].render(self.title, True, pg.Color("white"))
+        screen_play = fonts["menu"]["cta"].render(self.cta, True, pg.Color("white"))
+        screen.blit(screen_title, pg.Rect(((App.WINDOW_WIDTH // 2)-60,60), (58, 58)))
+        screen.blit(screen_play, pg.Rect(((App.WINDOW_WIDTH // 2)-140,App.WINDOW_HEIGHT - 200), (58, 58)))
 
 class Ball:
-    """"""
     WIDTH:  Final = 14
     HEIGHT: Final = 14
 
-    _INITIAL_VELOCITY: Final = 0.1
+    __velocity: Final = 0.1
 
     def __init__(self, fill):
-        self.center_pos = ((Game.WINDOW_WIDTH-Ball.WIDTH) // 2),  ((Game.WINDOW_HEIGHT- Ball.HEIGHT)//2)
+        self.center_pos = ((App.WINDOW_WIDTH-Ball.WIDTH) // 2),  ((App.WINDOW_HEIGHT- Ball.HEIGHT)//2)
         
         self.pos = pg.Vector2(self.center_pos)
-        self.vel = pg.Vector2(Ball._INITIAL_VELOCITY, Ball._INITIAL_VELOCITY)
+        self.vel = pg.Vector2(self.__velocity, self.__velocity)
 
         self.rect = pg.Rect(self.pos, (Ball.WIDTH, Ball.HEIGHT))
 
         self.surface = pg.Surface((Ball.WIDTH, Ball.HEIGHT))
         self.surface.fill(fill)
         
-    def _go_left(self):
-        self.vel.x = (-1 * Ball._INITIAL_VELOCITY)
+    def go_left(self):
+        self.vel.x = (-1 * self.__velocity)
 
-    def _go_right(self):
-        self.vel.x = Ball._INITIAL_VELOCITY
+    def go_right(self):
+        self.vel.x = self.__velocity
 
-    def _go_up(self):
-        self.vel.y = (-1 * Ball._INITIAL_VELOCITY)
+    def __go_up(self):
+        self.vel.y = (-1 * self.__velocity)
 
-    def _go_down(self):
-        self.vel.y = Ball._INITIAL_VELOCITY
+    def __go_down(self):
+        self.vel.y = self.__velocity
 
     def stop_ball(self):
         self.vel.x = 0
@@ -122,21 +124,22 @@ class Ball:
 
     def reset(self):
         self.pos = pg.Vector2(self.center_pos)
+        self.vel = pg.Vector2(Ball.__velocity, self.__velocity)
         self.rect.update(self.center_pos, (Ball.WIDTH, Ball.HEIGHT))
 
     def update(self):
-        if (self.rect.right >= Game.WINDOW_WIDTH):
+        if (self.rect.right >= App.WINDOW_WIDTH):
             self.reset()
             score_m.increment_score(Player.one)
-            self._go_right()
+            self.go_right()
         if (self.rect.left <= 0): 
             self.reset()
             score_m.increment_score(Player.two)
-            self._go_left()
+            self.go_left()
         if (self.rect.top <= 0):
-            self._go_down()
-        if (self.rect.bottom >= Game.WINDOW_HEIGHT):
-            self._go_up()
+            self.__go_down()
+        if (self.rect.bottom >= App.WINDOW_HEIGHT):
+            self.__go_up()
 
         self.pos.x += self.vel.x 
         self.pos.y += self.vel.y
@@ -152,7 +155,7 @@ class EventManager:
         on, off = 1, 0
 
     def __init__(self):
-        self.buffer: list[int] = [0, 0, 0, 0]
+        self.buffer: list[int] = [0] * 4
 
     def __repr__(self):
         return "[ K_UP({}), K_DW({}), K_w({}), K_s({}) ]".format(self.buffer[0], 
@@ -160,7 +163,7 @@ class EventManager:
                 self.buffer[2], self.buffer[3])
 
     def reset(self):
-        self.buffer: list[int] = [0, 0, 0, 0]
+        self.buffer = [0] * 4
     
     def handle_keydown(self, KeyCode):
         """When a key is pressed, update the state of the event buffer of index 'KeyCode' to 1
@@ -183,9 +186,9 @@ class Paddle:
     HEIGHT: Final = 140
 
     def __init__(self, x, y, fill):
-        _middle_y_position = ((Game.WINDOW_HEIGHT - Paddle.HEIGHT)//2)
+        self.__middle_y_position = ((App.WINDOW_HEIGHT - Paddle.HEIGHT)//2)
 
-        self.pos = pg.Vector2(x, _middle_y_position)
+        self.pos = pg.Vector2(x, self.__middle_y_position)
         self.vel = pg.Vector2(0, 15)
 
         # set the initial positon of the paddle
@@ -198,8 +201,11 @@ class Paddle:
         # TODO: Instead of using Window dimensions, use game.screen instead with 'get_rect()'
         if (self.rect.top <= 0):
             self.pos.y = 1
-        if (self.rect.bottom >= Game.WINDOW_HEIGHT):
-            self.pos.y = (Game.WINDOW_HEIGHT - Paddle.HEIGHT)
+        if (self.rect.bottom >= App.WINDOW_HEIGHT):
+            self.pos.y = (App.WINDOW_HEIGHT - Paddle.HEIGHT)
+
+    def reset(self):
+        self.pos.y = self.__middle_y_position
 
     def move_up(self):
         # TODO: Consider using ints instead of floats
@@ -216,35 +222,41 @@ class Paddle:
     def draw(self, screen):
         screen.blit(self.surface, self.rect)
 
-class Game:
+
+class App:
     
     WINDOW_WIDTH:  Final = 640
     WINDOW_HEIGHT: Final = 480
 
-    __paddle_sound = "hit_paddle.mp3"
-
     def __init__(self):
            
-        pg.init()
-        pg.mixer.init()
 
-        self.menu = MenuScene()
-
-        self.sound = pg.mixer.Sound("./sounds/" + Game.__paddle_sound)
+        self.menu = MenuScreen()
 
         pg.display.set_caption("Pong")
 
-        self.screen = pg.display.set_mode((Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT))
+        self.screen = pg.display.set_mode((App.WINDOW_WIDTH, App.WINDOW_HEIGHT))
 
         self.pong_ball    = Ball(pg.Color("white"))
         self.left_paddle  = Paddle(MARGIN, 0, pg.Color("white"))
-        self.right_paddle = Paddle((Game.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, pg.Color("white"))
+        self.right_paddle = Paddle((App.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, pg.Color("white"))
 
         self.event_m = EventManager()
         
         self.show_menu = 1
 
-    def _stop_game(self):
+        self.__running = True
+
+        self.run()
+
+    def __reset_game(self):
+        score_m.reset_score_board()
+        self.pong_ball.reset()
+        self.event_m.reset()
+        self.left_paddle.reset()
+        self.right_paddle.reset()
+
+    def __stop_game(self):
         self.pong_ball.stop_ball()
         self.event_m.reset()
     
@@ -265,46 +277,56 @@ class Game:
             self.pong_ball.draw(self.screen)
             self.right_paddle.draw(self.screen)
 
-            font_s_1 = font.render(str(score_m.score_board[0]), True, pg.Color("white"))
-            font_s_2 = font.render(str(score_m.score_board[1]), True, pg.Color("white"))
-            self.screen.blit(font_s_1, pg.Rect(( 
-                (Game.WINDOW_WIDTH // 2) - 48 - 12, 10), 
-                (font_s_1.get_width(), font_s_1.get_height())))
-            self.screen.blit(font_s_2, pg.Rect(( 
-                (Game.WINDOW_WIDTH // 2) - 48 + 86, 10), 
-                (font_s_2.get_width(), font_s_2.get_height())))
+            left_score  = fonts["game"]["score"].render(str(score_m.score_board[0]), True, pg.Color("white"))
+            right_score = fonts["game"]["score"].render(str(score_m.score_board[1]), True, pg.Color("white"))
+            dash        = fonts["game"]["score"].render("-", True, pg.Color("white"))
+
+            self.screen.blit(left_score, pg.Rect(( 
+                (App.WINDOW_WIDTH // 2) - 48 - 12, 10), 
+                (left_score.get_width(), left_score.get_height())))
+            self.screen.blit(right_score, pg.Rect(( 
+                (App.WINDOW_WIDTH // 2) - 48 + 86, 10), 
+                (right_score.get_width(), right_score.get_height())))
+            self.screen.blit(dash, pg.Rect(( 
+                (App.WINDOW_WIDTH // 2) - 10, 10), 
+                (right_score.get_width(), right_score.get_height())))
 
             if (score_m.is_winner()):
                 match (score_m.get_winner()):
                     case Player.one:
-                        winner = font.render("YOU WIN!", True, pg.Color("white"))
-                        loser = font.render("YOU LOSE!", True, pg.Color("white"))
+                        winner = fonts["game"]["score"].render("YOU WIN!", True, pg.Color("white"))
+                        loser = fonts["game"]["score"].render("YOU LOSE!", True, pg.Color("white"))
 
                         self.screen.blit(winner, pg.Rect(( 
-                            (Game.WINDOW_WIDTH // 4) - 40, (Game.WINDOW_HEIGHT // 2) - loser.get_height()), 
+                            (App.WINDOW_WIDTH // 4) - 40, (App.WINDOW_HEIGHT // 2) - loser.get_height()), 
                             (winner.get_width(), winner.get_height())))
 
                         self.screen.blit(loser, pg.Rect(( 
-                            (Game.WINDOW_WIDTH - loser.get_width()) - 100, (Game.WINDOW_HEIGHT // 2) - loser.get_height() ), 
+                            (App.WINDOW_WIDTH - loser.get_width()) - 100, (App.WINDOW_HEIGHT // 2) - loser.get_height() ), 
                             (loser.get_width(), loser.get_height())))
                     case Player.two:
-                        winner = font.render("YOU WIN!", True, pg.Color("white"))
-                        loser = font.render("YOU LOSE!", True, pg.Color("white"))
+                        winner = fonts["game"]["score"].render("YOU WIN!", True, pg.Color("white"))
+                        loser = fonts["game"]["score"].render("YOU LOSE!", True, pg.Color("white"))
 
                         self.screen.blit(winner, pg.Rect(( 
-                            (Game.WINDOW_WIDTH - winner.get_width()) - 100, (Game.WINDOW_HEIGHT // 2) - winner.get_height() ), 
+                            (App.WINDOW_WIDTH - winner.get_width()) - 100, (App.WINDOW_HEIGHT // 2) - winner.get_height() ), 
                             (winner.get_width(), winner.get_height())))
 
                         self.screen.blit(loser, pg.Rect(( 
-                            (Game.WINDOW_WIDTH // 4) - 80, (Game.WINDOW_HEIGHT // 2) - loser.get_height()), 
+                            (App.WINDOW_WIDTH // 4) - 80, (App.WINDOW_HEIGHT // 2) - loser.get_height()), 
                             (loser.get_width(), winner.get_height())))
-                    
-                self._stop_game()
+                 
+                reset = fonts["game"]["reset"].render("press r to reset".upper(), True, pg.Color("white"))
+                self.screen.blit(reset, pg.Rect(( 
+                    (App.WINDOW_WIDTH // 2) - 180, (App.WINDOW_HEIGHT -10) - reset.get_height()), 
+                    (reset.get_width(), reset.get_height())))
+
+                self.__stop_game()
 
         pg.display.flip()
 
     def run(self):
-        while True:
+        while self.__running:
             for event in pg.event.get():
 
                 match event.type:
@@ -321,6 +343,8 @@ class Game:
                             self.event_m.handle_keydown(KeyCode.key_s)
                         if (event.key == pg.K_RETURN):
                             self.show_menu = 0
+                        if (event.key == pg.K_r):
+                            self.__reset_game()
                     case pg.KEYUP:
                         if (event.key == pg.K_UP):
                             self.event_m.handle_keyup(KeyCode.key_up) 
@@ -343,20 +367,19 @@ class Game:
             
             # TODO: this function should not dictate the control of the ball, this should be done in the Ball class
             if (self.pong_ball.rect.colliderect(self.left_paddle.rect)):
-                self.sound.play()
-                self.pong_ball._go_right()
+                sounds["collision"]["paddle"].play()
+                self.pong_ball.go_right()
 
             if (self.pong_ball.rect.colliderect(self.right_paddle.rect)):
-                self.sound.play()
-                self.pong_ball._go_left()
-
+                sounds["collision"]["paddle"].play()
+                self.pong_ball.go_left()
 
             self.update()
 
             self.draw()
 
 def main():
-    Game().run()
+    App()
 
 if __name__ == "__main__":
     main()
