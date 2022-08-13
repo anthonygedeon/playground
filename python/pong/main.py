@@ -157,8 +157,10 @@ class EventManager:
     def __repr__(self):
         return "[ K_UP({}), K_DW({}), K_w({}), K_s({}) ]".format(self.buffer[0], 
                 self.buffer[1], 
-                self.buffer[2], 
-                self.buffer[3])
+                self.buffer[2], self.buffer[3])
+
+    def reset(self):
+        self.buffer: list[int] = [0, 0, 0, 0]
     
     def handle_keydown(self, KeyCode):
         """When a key is pressed, update the state of the event buffer of index 'KeyCode' to 1
@@ -226,6 +228,8 @@ class Game:
         pg.init()
         pg.mixer.init()
 
+        self.menu = MenuScene()
+
         self.sound = pg.mixer.Sound("./sfx/" + Game.__paddle_sound)
 
         pg.display.set_caption("Pong")
@@ -237,27 +241,65 @@ class Game:
         self.right_paddle = Paddle((Game.WINDOW_WIDTH-Paddle.WIDTH)-MARGIN, 0, pg.Color("white"))
 
         self.event_m = EventManager()
-        self.score_m = ScoreManager()
+        
+        self.show_menu = 1
+
+    def _stop_game(self):
+        self.pong_ball.stop_ball()
+        self.event_m.reset()
     
     def update(self):
-        self.left_paddle.update()
-        self.right_paddle.update()
-        self.pong_ball.update()
+        if (not self.show_menu):
+            self.left_paddle.update()
+            self.right_paddle.update()
+            self.pong_ball.update()
 
     def draw(self):
         self.screen.fill(pg.Color("black"))
-        self.left_paddle.draw(self.screen)
-        self.pong_ball.draw(self.screen)
-        self.right_paddle.draw(self.screen)
+        
+        if (self.show_menu):
+            self.menu.show(self.screen)
+        
+        if (not self.show_menu):
+            self.left_paddle.draw(self.screen)
+            self.pong_ball.draw(self.screen)
+            self.right_paddle.draw(self.screen)
 
-        font_s_1 = font.render(str(self.score_m.score_board[0]), True, pg.Color("white"))
-        font_s_2 = font.render(str(self.score_m.score_board[1]), True, pg.Color("white"))
-        self.screen.blit(font_s_1, pg.Rect(( 
-            (Game.WINDOW_WIDTH // 2) - 48 - 12, 10), 
-            (font_s_1.get_width(), font_s_1.get_height())))
-        self.screen.blit(font_s_2, pg.Rect(( 
-            (Game.WINDOW_WIDTH // 2) - 48 + 86, 10), 
-            (font_s_2.get_width(), font_s_2.get_height())))
+            font_s_1 = font.render(str(score_m.score_board[0]), True, pg.Color("white"))
+            font_s_2 = font.render(str(score_m.score_board[1]), True, pg.Color("white"))
+            self.screen.blit(font_s_1, pg.Rect(( 
+                (Game.WINDOW_WIDTH // 2) - 48 - 12, 10), 
+                (font_s_1.get_width(), font_s_1.get_height())))
+            self.screen.blit(font_s_2, pg.Rect(( 
+                (Game.WINDOW_WIDTH // 2) - 48 + 86, 10), 
+                (font_s_2.get_width(), font_s_2.get_height())))
+
+            if (score_m.is_winner()):
+                match (score_m.get_winner()):
+                    case Player.one:
+                        winner = font.render("YOU WIN!", True, pg.Color("white"))
+                        loser = font.render("YOU LOSE!", True, pg.Color("white"))
+
+                        self.screen.blit(winner, pg.Rect(( 
+                            (Game.WINDOW_WIDTH // 4) - 40, (Game.WINDOW_HEIGHT // 2) - loser.get_height()), 
+                            (winner.get_width(), winner.get_height())))
+
+                        self.screen.blit(loser, pg.Rect(( 
+                            (Game.WINDOW_WIDTH - loser.get_width()) - 100, (Game.WINDOW_HEIGHT // 2) - loser.get_height() ), 
+                            (loser.get_width(), loser.get_height())))
+                    case Player.two:
+                        winner = font.render("YOU WIN!", True, pg.Color("white"))
+                        loser = font.render("YOU LOSE!", True, pg.Color("white"))
+
+                        self.screen.blit(winner, pg.Rect(( 
+                            (Game.WINDOW_WIDTH - winner.get_width()) - 100, (Game.WINDOW_HEIGHT // 2) - winner.get_height() ), 
+                            (winner.get_width(), winner.get_height())))
+
+                        self.screen.blit(loser, pg.Rect(( 
+                            (Game.WINDOW_WIDTH // 4) - 80, (Game.WINDOW_HEIGHT // 2) - loser.get_height()), 
+                            (loser.get_width(), winner.get_height())))
+                    
+                self._stop_game()
 
         pg.display.flip()
 
@@ -277,6 +319,8 @@ class Game:
                             self.event_m.handle_keydown(KeyCode.key_w)
                         if (event.key == pg.K_s):
                             self.event_m.handle_keydown(KeyCode.key_s)
+                        if (event.key == pg.K_RETURN):
+                            self.show_menu = 0
                     case pg.KEYUP:
                         if (event.key == pg.K_UP):
                             self.event_m.handle_keyup(KeyCode.key_up) 
@@ -305,6 +349,7 @@ class Game:
             if (self.pong_ball.rect.colliderect(self.right_paddle.rect)):
                 self.sound.play()
                 self.pong_ball._go_left()
+
 
             self.update()
 
