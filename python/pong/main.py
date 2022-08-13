@@ -230,7 +230,7 @@ class Game:
 
         self.menu = MenuScene()
 
-        self.sound = pg.mixer.Sound("./sfx/" + Game.__paddle_sound)
+        self.sound = pg.mixer.Sound("./sounds/" + Game.__paddle_sound)
 
         pg.display.set_caption("Pong")
 
