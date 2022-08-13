@@ -2,6 +2,8 @@
 
 A simple implementation of classic Atari 1972 Pong game
 
+<img src="docs/pong.png" alt="game being played">
+
 ## About this project
 This project was mainly for practice and getting familiar with Python & Pygame so please excuse the messy code
 
