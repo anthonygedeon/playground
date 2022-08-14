@@ -1,6 +1,6 @@
 import pygame as pg
 
-import abc
+import abc, sys
 from enum import Enum
 
 class ScreenInterface(abc.ABC):
@@ -72,3 +72,45 @@ class App:
 
 if __name__ == "__main__":
     App()
+    
+    pg.init()
+    
+    size = width, height = 680, 420
+
+    screen = pg.display.set_mode(size)
+
+    pg.display.set_caption("Snake")
+
+    while True:
+        for event in pg.event.get():
+            match (event.type):
+                case pg.QUIT:
+                    sys.exit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
