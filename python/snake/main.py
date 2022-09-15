@@ -26,7 +26,18 @@ class Food:
 
 class EventController:
     """"""
-    pass
+    
+    def listen(self):
+        """"""
+        for event in pg.event.get():
+            match (event.type):
+                case pg.QUIT:
+                    sys.exit()
+                case pg.KEYDOWN:
+                    pass
+                case pg.KEYUP:
+                    pass
+
 
 class StartMenuScreen(ScreenInterface):
     """"""
@@ -56,11 +67,19 @@ class Game:
 class App:
     """""" 
     def __init__(self):
-        pass
+        self.setup()
+        
+        self.size = 680, 420
+        self.screen = pg.display_set_mode(self.size)
 
     def setup(self):
         """"""
-        pass
+        pg.init()
+        pg.mixer.init() 
+        pg.font.init()
+
+        pg.display.set_caption("Snake")
+
 
     def update(self):
         """"""
@@ -72,21 +91,8 @@ class App:
 
 if __name__ == "__main__":
     App()
-    
-    pg.init()
-    
-    size = width, height = 680, 420
-
-    screen = pg.display.set_mode(size)
-
-    pg.display.set_caption("Snake")
 
     while True:
-        for event in pg.event.get():
-            match (event.type):
-                case pg.QUIT:
-                    sys.exit()
-
 
 
 
