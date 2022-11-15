@@ -1,3 +1,4 @@
+$dont_switch_player = false
 
 class Piece
   attr_accessor :symbol
@@ -18,11 +19,26 @@ class Board
   def set_pos(pos, marker)
     case pos
     when (0..2) 
+      if !@board[0][pos % 3].nil?
+        $dont_switch_player = false
+        return
+      end
       @board[0][pos % 3] = marker
+      $dont_switch_player = true
     when (3..5) 
+      if !@board[1][pos % 3].nil?
+        $dont_switch_player = false
+        return
+      end
       @board[1][pos % 3] = marker
+      $dont_switch_player = true
     when (6..8) 
+      if !@board[2][pos % 3].nil?
+        $dont_switch_player = false
+        return
+      end
       @board[2][pos % 3] = marker
+      $dont_switch_player = true
     end
   end
 
@@ -39,6 +55,42 @@ class Board
 end
 
 class Game
+  def self.run
+    self.start
+    
+    while @is_running
+      print "Player #{ @pieces[@current_player].symbol } Enter your position: "
+      pos = gets.chomp 
+      @board.set_pos(pos.to_i, @pieces[@current_player].symbol)
+      puts @board
+      
+      if $dont_switch_player
+        self.switch_player
+      end
+    end
+
+  end
+
+  private
+  attr_accessor :score, :pieces
+  
+  @board = Board.new
+  
+  @score = [0, 0]
+
+  @pieces = [Piece.new('X'), Piece.new('O')]
+
+  @is_running = true
+
+  @current_player = 0
+
+  def self.switch_player
+      if @current_player == 0 
+        @current_player = 1
+      else
+        @current_player = 0
+      end
+  end
 
   def self.start
     puts "" 
@@ -63,41 +115,6 @@ class Game
     puts ""
 
     puts "=" * 100
-  end
-
-  def self.run
-    self.start
-    
-    while @is_running
-      print "Player #{ @pieces[@current_player].symbol }: "
-      pos = gets.chomp 
-      @board.set_pos(pos.to_i, @pieces[@current_player].symbol)
-      puts @board
-
-      self.switch_player
-    end
-
-  end
-
-  private
-  attr_accessor :score, :pieces
-  
-  @board = Board.new
-  
-  @score = [0, 0]
-
-  @pieces = [Piece.new('X'), Piece.new('O')]
-
-  @is_running = true
-
-  @current_player = 0
-
-  def self.switch_player
-      if @current_player == 0 
-        @current_player = 1
-      else
-        @current_player = 0
-      end
   end
 end
 
