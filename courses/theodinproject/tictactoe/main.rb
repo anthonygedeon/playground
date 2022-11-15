@@ -1,3 +1,4 @@
+
 class Piece
   attr_accessor :symbol
 
@@ -7,8 +8,11 @@ class Piece
 end
 
 class Board
+  ROWS = 3
+  COLS = 3
+
   def initialize
-    @board = Array.new(3) { Array.new(3) { nil } }
+    @board = Array.new(ROWS) { Array.new(COLS) { nil } }
   end
 
   def set_pos(pos, marker)
@@ -65,11 +69,12 @@ class Game
     self.start
     
     while @is_running
-      piece = @pieces.rotate!
-      print "Player #{ piece.first.symbol }: "
+      print "Player #{ @pieces[@current_player].symbol }: "
       pos = gets.chomp 
-      @board.set_pos(pos.to_i, piece.first.symbol)
+      @board.set_pos(pos.to_i, @pieces[@current_player].symbol)
       puts @board
+
+      self.switch_player
     end
 
   end
@@ -81,9 +86,19 @@ class Game
   
   @score = [0, 0]
 
-  @pieces = [Piece.new('O'), Piece.new('X')]
+  @pieces = [Piece.new('X'), Piece.new('O')]
 
   @is_running = true
+
+  @current_player = 0
+
+  def self.switch_player
+      if @current_player == 0 
+        @current_player = 1
+      else
+        @current_player = 0
+      end
+  end
 end
 
 Game.run
