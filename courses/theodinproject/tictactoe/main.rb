@@ -16,6 +16,10 @@ class Board
     @board = Array.new(ROWS) { Array.new(COLS) { nil } }
   end
 
+  def is_winner?
+    self.check_winner
+  end
+
   def set_pos(pos, marker)
     case pos
     when (0..2) 
@@ -52,6 +56,67 @@ class Board
       puts ""
     end
   end
+
+  private
+  
+  def check_horizontals
+    @board.each do |row| 
+      if row.all?('X') 
+        puts "Player X Won!"
+        return true
+      elsif row.all?('O')
+        puts "Player O Won!"
+        return true
+      end
+    end
+    return false
+  end
+
+  def check_verticals
+    @board.transpose.each do |row| 
+      if row.all?('X') 
+        puts "Player X Won!"
+        return true
+      elsif row.all?('O')
+        puts "Player O Won!"
+        return true
+      end
+    end
+    return false
+  end
+
+  def check_diagonals
+    left_diag  = []
+    right_diag = []
+    @board.each_index do |idx|
+      left_diag << @board[idx][idx] unless @board[idx][idx].nil?
+    end
+    @board.each_index do |idx|
+      diag_piece = @board[idx][(@board.size-1) - idx]
+      right_diag << diag_piece unless diag_piece.nil?
+    end
+    if left_diag.all?('X') && left_diag.size == 3
+      puts "Player X Won!"
+      return true
+    end
+    if right_diag.all?('X') && right_diag.size == 3
+      puts "Player X Won!"
+      return true
+    end
+    if right_diag.all?('O') && right_diag.size == 3
+      puts "Player O Won!"
+      return true
+    end
+    if left_diag.all?('O') && left_diag.size == 3
+      puts "Player O Won!"
+      return true
+    end
+    return false
+  end
+
+  def check_winner
+    [self.check_horizontals, self.check_verticals, self.check_diagonals].any?(true)
+  end
 end
 
 class Game
@@ -66,6 +131,10 @@ class Game
       
       if $dont_switch_player
         self.switch_player
+      end
+
+      if @board.is_winner?
+        @is_running = false
       end
     end
 
