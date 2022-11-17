@@ -1,5 +1,6 @@
 $dont_switch_player = false
 
+# The marker that will be on the tic-tac-toe board 
 class Piece
   attr_accessor :symbol
 
@@ -8,6 +9,7 @@ class Piece
   end
 end
 
+# Board for Tic-Tac-Toe
 class Board
   ROWS = 3
   COLS = 3
@@ -119,6 +121,7 @@ class Board
   end
 end
 
+# Main game, controls the state of the game
 class Game
   def self.run
     self.start
