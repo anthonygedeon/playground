@@ -1,5 +1,3 @@
-$dont_switch_player = false
-
 # The marker that will be on the tic-tac-toe board 
 class Piece
   attr_accessor :symbol
@@ -13,6 +11,9 @@ end
 class Board
   ROWS = 3
   COLS = 3
+  
+  attr_accessor :stop_switch
+  @stop_switch = false
 
   def initialize
     @board = Array.new(ROWS) { Array.new(COLS) { nil } }
@@ -24,27 +25,27 @@ class Board
 
   def set_pos(pos, marker)
     case pos
-    when (0..2) 
-      if !@board[0][pos % 3].nil?
-        $dont_switch_player = false
+    when (1..3) 
+      if !@board[0][(pos-1) % 3].nil?
+        @stop_switch = false
         return
       end
-      @board[0][pos % 3] = marker
-      $dont_switch_player = true
-    when (3..5) 
-      if !@board[1][pos % 3].nil?
-        $dont_switch_player = false
+      @board[0][(pos-1) % 3] = marker
+      @stop_switch = true
+    when (4..6) 
+      if !@board[1][(pos-1) % 3].nil?
+        @stop_switch = false
         return
       end
-      @board[1][pos % 3] = marker
-      $dont_switch_player = true
-    when (6..8) 
-      if !@board[2][pos % 3].nil?
-        $dont_switch_player = false
+      @board[1][(pos-1) % 3] = marker
+      @stop_switch = true
+    when (7..9) 
+      if !@board[2][(pos-1) % 3].nil?
+        @stop_switch = false
         return
       end
-      @board[2][pos % 3] = marker
-      $dont_switch_player = true
+      @board[2][(pos-1) % 3] = marker
+      @stop_switch = true
     end
   end
 
@@ -59,15 +60,17 @@ class Board
     end
   end
 
+  def is_full?
+    @board.flatten.none?(nil)
+  end
+
   private
   
   def check_horizontals
     @board.each do |row| 
       if row.all?('X') 
-        puts "Player X Won!"
         return true
       elsif row.all?('O')
-        puts "Player O Won!"
         return true
       end
     end
@@ -77,10 +80,8 @@ class Board
   def check_verticals
     @board.transpose.each do |row| 
       if row.all?('X') 
-        puts "Player X Won!"
         return true
       elsif row.all?('O')
-        puts "Player O Won!"
         return true
       end
     end
@@ -98,23 +99,20 @@ class Board
       right_diag << diag_piece unless diag_piece.nil?
     end
     if left_diag.all?('X') && left_diag.size == 3
-      puts "Player X Won!"
       return true
     end
     if right_diag.all?('X') && right_diag.size == 3
-      puts "Player X Won!"
       return true
     end
     if right_diag.all?('O') && right_diag.size == 3
-      puts "Player O Won!"
       return true
     end
     if left_diag.all?('O') && left_diag.size == 3
-      puts "Player O Won!"
       return true
     end
     return false
   end
+
 
   def check_winner
     [self.check_horizontals, self.check_verticals, self.check_diagonals].any?(true)
@@ -126,21 +124,28 @@ class Game
   def self.run
     self.start
     
-    while @is_running
+    loop do
+      if @board.is_winner?
+        winning_player = @current_player == 1 ? 0 : 1 
+        puts "Player #{@pieces[winning_player].symbol} has won!"
+        break
+      end
+
+      if @board.is_full? 
+        puts "Draw!" 
+        break
+      end
+
       print "Player #{ @pieces[@current_player].symbol } Enter your position: "
       pos = gets.chomp 
       @board.set_pos(pos.to_i, @pieces[@current_player].symbol)
       puts @board
       
-      if $dont_switch_player
+      if @board.stop_switch
         self.switch_player
       end
 
-      if @board.is_winner?
-        @is_running = false
-      end
     end
-
   end
 
   private
@@ -151,8 +156,6 @@ class Game
   @score = [0, 0]
 
   @pieces = [Piece.new('X'), Piece.new('O')]
-
-  @is_running = true
 
   @current_player = 0
 
@@ -178,11 +181,11 @@ class Game
     puts "3. The first player to get 3 of her marks in a row (up, down, across, or diagonally) is the winner.\n\n"
     puts "4. When all 9 squares are full, the game is over. If no player has 3 marks in a row, the game ends in a tie.\n\n"
     
-    puts "  0  |  1  |  2  \n"
+    puts "  1  |  2  |  3  \n"
     puts "-" * 16
-    puts "  3  |  4  |  5  \n"
+    puts "  4  |  5  |  6  \n"
     puts "-" * 16
-    puts "  6  |  7  |  8  \n"
+    puts "  7  |  8  |  9  \n"
 
     puts ""
 
