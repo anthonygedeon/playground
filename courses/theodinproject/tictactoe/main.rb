@@ -128,7 +128,7 @@ class Game
       puts @board
       
       if @board.stop_switch
-        self.switch_player
+        self.switch_player!
       end
 
     end
@@ -145,7 +145,7 @@ class Game
 
   @current_player = 0
 
-  def self.switch_player
+  def self.switch_player!
       if @current_player == 0 
         @current_player = 1
       else
