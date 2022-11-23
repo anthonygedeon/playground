@@ -19,10 +19,6 @@ class Board
     @board = Array.new(ROWS) { Array.new(COLS) { nil } }
   end
 
-  def is_winner?
-    self.check_winner
-  end
-
   def set_pos(pos, marker)
     case pos
     when (1..3) 
@@ -64,28 +60,25 @@ class Board
     @board.flatten.none?(nil)
   end
 
+  def is_winner?
+    [self.check_horizontals, self.check_verticals, self.check_diagonals].any?
+  end
+
   private
   
   def check_horizontals
-    @board.each do |row| 
-      if row.all?('X') 
-        return true
-      elsif row.all?('O')
-        return true
-      end
-    end
+    @board.each { |row| return true if all_equal?(row) }
     return false
   end
 
   def check_verticals
-    @board.transpose.each do |row| 
-      if row.all?('X') 
-        return true
-      elsif row.all?('O')
-        return true
-      end
-    end
+    @board.transpose.each { |row| return true if all_equal?(row) }
     return false
+  end
+
+  def all_equal?(row)
+    return if row.first.nil?
+    row.all? { |piece| piece == row.first }
   end
 
   def check_diagonals
@@ -94,29 +87,22 @@ class Board
     @board.each_index do |idx|
       left_diag << @board[idx][idx] unless @board[idx][idx].nil?
     end
+
     @board.each_index do |idx|
       diag_piece = @board[idx][(@board.size-1) - idx]
       right_diag << diag_piece unless diag_piece.nil?
     end
-    if left_diag.all?('X') && left_diag.size == 3
+
+    if left_diag.all?('X') && left_diag.size == 3 || right_diag.all?('X') && right_diag.size == 3
       return true
     end
-    if right_diag.all?('X') && right_diag.size == 3
+    if right_diag.all?('O') && right_diag.size == 3 || left_diag.all?('O') && left_diag.size == 3
       return true
     end
-    if right_diag.all?('O') && right_diag.size == 3
-      return true
-    end
-    if left_diag.all?('O') && left_diag.size == 3
-      return true
-    end
+
     return false
   end
 
-
-  def check_winner
-    [self.check_horizontals, self.check_verticals, self.check_diagonals].any?(true)
-  end
 end
 
 # Main game, controls the state of the game
