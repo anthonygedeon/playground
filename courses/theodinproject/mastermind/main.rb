@@ -19,21 +19,10 @@ class Code
     # do not count a empty circle if the number is in the correct spot
     # repeated number in guess should not generate more empty circles
       # i.e Master Code: 1214 Guess: 3111 Answer: ○ ○ ○  which is wrong, it should be ○ ○ 
-    count_wrong_spots = 0
-    master_code_clone = @master_code.clone
-    pp guess
-    @master_code.each_index do |idx|
-      # delete the numbers that are already in the right spot
-      master_code_clone.each_index { |cidx| pp "#{master_code_clone[cidx]},  #{guess[cidx]}"; master_code_clone.delete_at(cidx) if master_code_clone[cidx] == guess[cidx] }
-      pp master_code_clone
-
-      if master_code_clone.include?(guess[idx]) 
-        count_wrong_spots += 1
+    guess.each_with_index do |guess_val, guess_idx| 
+      @master_code.each_with_index do |code_val, code_idx|
       end
-
     end
-    master_code_clone = @master_code
-    count_wrong_spots 
   end
   
   # 
