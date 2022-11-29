@@ -1,5 +1,13 @@
 require 'rainbow'
 
+class Guess
+  
+  def initialize
+    @guess = Hash.new 
+  end
+
+end
+
 class Code
   attr_reader :master_code
   
@@ -46,10 +54,52 @@ end
 class Game
   
   def initialize
+    @code = Code.new
   end
 
   def draw
+    self.begin_tutorial
+  end
 
+  def update
+    puts "The computer has set the 'master code' and now it's time for you to break the code."
+    puts "[DEBUG] Master Code: #{@code.master_code}"
+    puts 
+
+    current_turn = 1
+
+    loop do
+      puts "Turn ##{current_turn}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
+
+      guess = gets.chomp.split('').map(&:to_i)
+
+      puts "#{guess} clues: #{@code.create_clues_from(guess)}"
+      
+      if current_turn == 12
+        self.game_over
+        puts 
+        self.try_again
+      end
+
+      current_turn += 1
+    end
+  end
+
+  private 
+
+  def try_again
+    puts "Do you want to play again? Press 'y' for yes (or any other key for no)."
+    gets
+  end
+
+  def game_over
+    puts Rainbow("Game over. That was a hard code to break! ¯\\_(ツ)_/¯").red
+    puts
+    puts "Here is the 'master code' that you were trying to break:"
+    puts "#{@code.master_code}"
+  end
+
+  def begin_tutorial
     puts 
     puts Rainbow("How to play Mastermind:").underline
     puts "This is a 1-player game against the computer."
@@ -99,30 +149,14 @@ Clues: ● ○ ○"
     puts "Press '2' to be the code BREAKER"
     gets
   end
-
-  def update
-
-  end
-
 end
 
 def main
-  
   mastermind = Game.new
 
   mastermind.draw
 
-  code = Code.new
-  puts "The computer has generated the code #{code.master_code}"
-
-  loop do 
-    puts "Type in four numbers (1-6) to guess the code"
-
-    guess = gets.chomp.split('').map(&:to_i)
-
-    puts "#{guess} clues: #{code.create_clues_from(guess)}"
-  end
-
+  mastermind.update
 end
 
 main
