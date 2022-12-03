@@ -1,59 +1,67 @@
--- 1. 
-SELECT name, continent, population FROM world
-
--- 2. 
+-- 1
 SELECT name FROM world
-WHERE population >= 200000000
+  WHERE name LIKE 'Y%';
 
--- 3. 
-SELECT name, gdp/population FROM world 
-WHERE population >= 200000000
-
--- 4. 
-SELECT name, population/1000000 FROM world
-WHERE continent = 'South America'
-
--- 5. 
-SELECT name, population FROM world
-WHERE name IN ('France', 'Germany', 'Italy')
-
--- 6. 
+-- 2
 SELECT name FROM world
-WHERE name LIKE '%United%'
+  WHERE name LIKE '%y';
 
--- 7. 
-SELECT name, population, area FROM world
-WHERE population > 250000000 OR area > 3000000
+-- 3
+SELECT name FROM world
+  WHERE name LIKE '%x%';
 
--- 8. TODO
-SELECT name, population, area FROM world
-WHERE 
+-- 4
+SELECT name FROM world
+  WHERE name LIKE '%land';
 
--- 9. 
-SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2) 
-FROM world
-WHERE continent = 'South America'
+-- 5
+SELECT name FROM world
+  WHERE name LIKE 'C%ia';
 
--- 10. 
-SELECT name, ROUND((gdp/population), -3) FROM world
-WHERE gdp >= 1000000000000
+-- 6
+SELECT name FROM world
+  WHERE name LIKE '%oo%';
 
--- 11. 
-SELECT name, capital
-  FROM world
- WHERE LEN(name) = LEN(capital);
+-- 7
+SELECT name FROM world
+  WHERE name LIKE '%a%a%a%';
 
--- 12. 
-SELECT name, capital
-FROM world
-WHERE LEFT(name, 1) = LEFT(capital, 1) AND name <> capital
+-- 8
+SELECT name FROM world
+ WHERE name LIKE '_t%'
+ORDER BY name;
 
--- 13.
+-- 9
+SELECT name FROM world
+ WHERE name LIKE '%o__o%';
+
+-- 10
+SELECT name FROM world
+ WHERE name LIKE '____';
+
+-- 11
 SELECT name
-   FROM world
-WHERE name NOT LIKE '% %'
-    AND name LIKE '%a%' 
-    AND name LIKE '%e%'
-    AND name LIKE '%i%'
-    AND name LIKE '%o%'
-    AND name LIKE '%u%'
+  FROM world
+ WHERE name = capital;
+
+-- 12
+SELECT name
+  FROM world
+ WHERE concat(name, ' ', 'City') = capital;
+
+-- 13
+SELECT capital, name 
+  FROM world
+ WHERE LEFT(capital, LEN(name)) = name;
+
+-- 14
+SELECT capital, name 
+  FROM world
+ WHERE name <> capital AND LEFT(capital, LEN(name)) = name
+
+-- 15
+SELECT name, REPLACE(capital, name, '') AS extension
+  FROM world
+ WHERE capital LIKE CONCAT(name, '_%');
+ 
+
