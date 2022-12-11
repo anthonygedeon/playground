@@ -25,10 +25,9 @@
  SELECT name, population, area FROM world
  WHERE population > 250000000 OR area > 3000000;
 
- -- 8. TODO
+ -- 8. 
  SELECT name, population, area FROM world
- WHERE;
-
+ WHERE (area > 3000000 AND population < 250000000) OR (population > 250000000 AND area < 3000000);
  -- 9.
  SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2)
  FROM world
