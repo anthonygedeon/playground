@@ -21,8 +21,43 @@ WHERE name = 'Italy'
 AND MONTH(whn) = 3 AND YEAR(whn) = 2020
 ORDER BY whn;
 
--- 4 TODO 
--- 5 TODO
--- 6 TODO
--- 7 TODO
+-- 4 
+SELECT name, DATE_FORMAT(whn,'%Y-%m-%d'), confirmed - LAG(confirmed) OVER (ORDER BY whn)
+ FROM covid
+WHERE name = 'Italy'
+AND WEEKDAY(whn) = 0 AND YEAR(whn) = 2020
+ORDER BY whn;
+
+-- 5 
+SELECT tw.name,
+       DATE_FORMAT(tw.whn, '%Y-%m-%d'),
+       lw.confirmed - LAG(lw.confirmed) OVER (ORDER BY lw.whn) AS confirmed_new_cases
+FROM covid tw
+    LEFT JOIN covid lw
+        ON DATE_ADD(lw.whn, INTERVAL 0 WEEK) = tw.whn AND tw.name = lw.name
+WHERE tw.name = 'Italy'
+      AND WEEKDAY(tw.whn) = 0
+ORDER BY tw.whn;
+
+-- 6 
+SELECT name,
+       confirmed,
+       RANK() OVER (ORDER BY confirmed DESC) rc,
+       deaths,
+       RANK() OVER (ORDER BY deaths DESC) rc
+FROM covid
+WHERE whn = '2020-04-20'
+ORDER BY confirmed DESC;
+
+-- 7 
+SELECT world.name,
+       ROUND(100000 * confirmed / population, 0),
+       RANK() OVER (ORDER BY (confirmed / population))
+FROM covid
+    JOIN world
+        ON covid.name = world.name
+WHERE whn = '2020-04-20'
+      AND population > 10000000
+ORDER BY population DESC;
+
 -- 8 TODO
