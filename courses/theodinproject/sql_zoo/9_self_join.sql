@@ -56,6 +56,64 @@ FROM route a JOIN route b ON
   JOIN stops stopb ON (b.stop=stopb.id)
 WHERE stopa.name='Craiglockhart' AND stopb.name='Tollcross';
 
--- 9 TODO
+-- 9 
+SELECT stopb.name,
+       a.company,
+       a.num
+FROM route a
+    JOIN route b
+        ON (
+               a.company = b.company
+               AND a.num = b.num
+           )
+    JOIN stops stopa
+        ON (a.stop = stopa.id)
+    JOIN stops stopb
+        ON (b.stop = stopb.id)
+WHERE stopa.name = 'Craiglockhart'
+      AND a.company = 'LRT';
 
--- 10 TODO
+-- 10 
+SELECT R1.num,
+       R1.company,
+       R1.name,
+       R2.num,
+       R2.company
+FROM
+(
+    SELECT stopb.name,
+           a.company,
+           a.num
+    FROM route a
+        JOIN route b
+            ON (
+                   a.company = b.company
+                   AND a.num = b.num
+               )
+        JOIN stops stopa
+            ON (a.stop = stopa.id)
+        JOIN stops stopb
+            ON (b.stop = stopb.id)
+    WHERE stopa.name = 'Craiglockhart'
+) R1
+    JOIN
+    (
+        SELECT stopb.name,
+               a.company,
+               a.num
+        FROM route a
+            JOIN route b
+                ON (
+                       a.company = b.company
+                       AND a.num = b.num
+                   )
+            JOIN stops stopa
+                ON (a.stop = stopa.id)
+            JOIN stops stopb
+                ON (b.stop = stopb.id)
+        WHERE stopa.name = 'Lochend'
+    ) R2
+        ON (R1.name = R2.name)
+ORDER BY R1.num,
+         name,
+         R2.num;
