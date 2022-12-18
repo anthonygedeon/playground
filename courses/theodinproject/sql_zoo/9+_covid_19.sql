@@ -60,4 +60,23 @@ WHERE whn = '2020-04-20'
       AND population > 10000000
 ORDER BY population DESC;
 
--- 8 TODO
+-- 8 
+SELECT name,
+       date,
+       peakNewCases
+FROM
+(
+    SELECT name,
+           date,
+           peakNewCases,
+           RANK() OVER (PARTITION BY name ORDER BY peakNewCases DESC) AS rank
+    FROM
+    (
+        SELECT name,
+               DATE_FORMAT(whn, '%Y-%m-%d') AS date,
+               confirmed - (LAG(confirmed, 1) OVER (PARTITION BY name ORDER BY whn)) AS peakNewCases
+        FROM covid
+    ) TAB
+    WHERE peakNewCases >= 1000
+) TAB
+WHERE rank = 1;
