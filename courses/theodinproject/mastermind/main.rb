@@ -1,52 +1,59 @@
 require 'rainbow'
 
-class Guess
-  attr_reader :number
-  attr_accessor :same_position, :same_number  
-  
-  def initialize(number)
-    @same_position = false
-    @same_number   = false
-    @number        = number
-  end
-
-end
-
 class Code
   attr_reader :master_code
-  
+
   def initialize
-    @master_code = (1..6).to_a.sample(4)
+    #@master_code = (1..6).to_a.sample(4)
+    @master_code = [1, 3, 4, 1]
   end
 
   def create_clues_from(guess)
-    set_correct_spots(guess)
-    set_wrong_spots(guess)
-    ("● " * count_correct_spots(guess)) + ( "○ " * count_wrong_spots(guess))
+    correct_spots = tally_correct_spots(guess)
+    wrong_spots = tally_wrong_spots(guess).count :empty
+    clues = ("● " * correct_spots) + ("○ " * wrong_spots)
+    clues
   end
 
   private
 
-  def count_wrong_spots(guess)
-    wrong_spots = 0
-    guess.each { |g| wrong_spots += 1 if g.same_number && !g.same_position }
-    wrong_spots
-  end
-
-  def count_correct_spots(guess)
-    correct_spots = 0
-    guess.each { |g| correct_spots += 1 if g.same_number && g.same_position }
-    correct_spots
-  end
-
   #
-  def set_wrong_spots(guess)
+  def tally_wrong_spots(guess)
+    # the individual number from `guess` exist in @master_code 
+    # do not count a empty circle if the number is in the correct spot
+    # repeated number in guess should not generate more empty circles
+      # i.e Master Code: 1214 Guess: 3111 Answer: ○ ○ ○  which is wrong, it should be ○ ○ 
+    correct_spots_code = @master_code.clone
 
+    # 1. discard any matched numbers and update array with :fill symbol
+    guess.each_with_index do |guess_val, guess_idx| 
+      @master_code.each_with_index do |code_val, code_idx|
+        if guess_val == code_val  && code_idx == guess_idx
+          correct_spots_code[code_idx] = :fill
+          guess[code_idx] = :fill
+        end
+      end
+    end
+    
+    guess.each_with_index do |guess_val, guess_idx| 
+      correct_spots_code.each_with_index do |code_val, code_idx|
+        if guess_val == code_val && code_idx != guess_idx && guess_val != :fill
+          correct_spots_code[code_idx] = :empty
+          next
+        end
+      end
+    end
+
+    p "Spots: #{correct_spots_code}"
+
+    correct_spots_code
   end
   
   # 
-  def set_correct_spots(guess)
-    @master_code.each_index { |idx| guess[idx].same_number=true; guess[idx].same_position=true if @master_code[idx] == guess[idx].number }
+  def tally_correct_spots(guess)
+    count_correct_spots = 0
+    @master_code.each_index { |idx| count_correct_spots += 1 if @master_code[idx] == guess[idx] }
+    count_correct_spots
   end
 
 end
@@ -71,7 +78,7 @@ class Game
     loop do
       puts "Turn ##{current_turn}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
 
-      guess = gets.chomp.split('').map { |num_str| Guess.new(num_str.to_i) }
+      guess = gets.chomp.split('').map(&:to_i)
 
       puts "#{guess} clues: #{@code.create_clues_from(guess)}"
       
@@ -82,12 +89,6 @@ class Game
       end
 
       current_turn += 1
-
-      guess.each do |g|
-        g.same_position = false
-        g.same_number = false
-      end
-
     end
   end
 
