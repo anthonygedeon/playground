@@ -21,5 +21,4 @@ class Clue
   end
 
   private 
-
 end
