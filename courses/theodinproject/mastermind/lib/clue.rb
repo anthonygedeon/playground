@@ -1,5 +1,4 @@
 class Clue 
-  #
   def self.make(code, guess)
     code.each_index do |i|
       if code[i] == guess[i]
