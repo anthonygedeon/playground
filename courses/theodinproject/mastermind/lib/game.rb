@@ -85,6 +85,10 @@ Clues: ● ○ ○"
       puts "Turn ##{current_turn}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
 
       guess = gets.chomp.split('').map(&:to_i)
+
+      if guess.length != 4
+        puts Rainbow("Your guess should only be 4 digits between 1-6").red
+      end
       
       puts
       puts "#{guess.map { |num| UI::COLORS[num] }.join(" ") } clues: #{@code.create_clues_from(guess)}"
