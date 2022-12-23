@@ -61,7 +61,13 @@ Clues: ● ○ ○"
     puts
     puts "Press '1' to be the code MAKER"
     puts "Press '2' to be the code BREAKER"
-    gets
+
+    user_input = gets.chomp
+    while (user_input != "1") || (user_input != "2")
+      puts Rainbow("Enter '1' to be the code MAKER or '2' to be the code BREAKER.").red
+      user_input = gets.chomp
+      p user_input
+    end
   end
   
   private
@@ -86,7 +92,7 @@ Clues: ● ○ ○"
 
       guess = gets.chomp.split('').map(&:to_i)
 
-      if guess.length != 4
+      if guess.length != 4 || !guess.all? { |n| n > 0 && n <= 6 }
         puts Rainbow("Your guess should only be 4 digits between 1-6").red
       end
       
