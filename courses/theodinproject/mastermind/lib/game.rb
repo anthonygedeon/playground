@@ -1,14 +1,32 @@
 require_relative 'code'
 
 class Game
+    @@tries   = 1
+    @@running = true
+    @@play_again = false
+
   def run
-    self.draw
-    self.update
+    self.begin_tutorial
+    self.start_game
   end
 
-  def try_again
+  def play_again
     puts "Do you want to play again? Press 'y' for yes (or any other key for no)."
-    gets
+    user_input = gets.chomp.downcase
+    if user_input != 'y' || user_input != 'yes'
+      @@running = false
+    end
+    if user_input == 'y' || user_input == 'yes'
+      self.reset
+    end
+  end
+
+  def reset
+    @@tries = 1
+    @@running = true
+    @code.regenerate
+    self.begin_tutorial
+    self.start_game
   end
 
   def game_over
