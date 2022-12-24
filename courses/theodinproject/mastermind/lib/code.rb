@@ -6,7 +6,11 @@ class Code
   end
 
   def create_clues_from(guess)
-    Clue.make(@master_code.clone, guess).map { |state| UI::CIRCLE.fetch(state) }.join(" ")
+    Clue.make(@master_code, guess).map { |state| UI::CIRCLE.fetch(state) }.join(" ")
+  end
+
+  def regenerate
+    @master_code = (1..6).to_a.sample(4)
   end
   
   # remove later, only for debugging purposes
