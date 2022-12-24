@@ -42,7 +42,7 @@ class Game
 
   def begin_tutorial
     puts 
-    puts Rainbow("How to play Mastermind:").underline
+    puts Rainbow("How to play Mastermind:").underline 
     puts "This is a 1-player game against the computer."
     puts "You can choose to be the code #{Rainbow("maker").underline} or the code #{Rainbow("breaker").underline}."
     puts
