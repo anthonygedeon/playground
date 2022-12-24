@@ -15,7 +15,11 @@ class Game
     puts Rainbow("Game over. That was a hard code to break! ¯\\_(ツ)_/¯").red
     puts
     puts "Here is the 'master code' that you were trying to break:"
-    puts "#{@code.master_code}"
+    puts "#{UI::format(@code.print_code)}"
+  end
+
+  def winner
+    puts Rainbow("You broke the code! Congratulations, you win!").green
   end
 
   def begin_tutorial
@@ -97,7 +101,16 @@ Clues: ● ○ ○"
       end
       
       puts
-      puts "#{guess.map { |num| UI::COLORS[num] }.join(" ") } clues: #{@code.create_clues_from(guess)}"
+      puts "#{UI::format(guess)} clues: #{@code.create_clues_from(guess)}"
+      
+      if Clue.make(@code.print_code, guess).all?(:fill) && @code.print_code.length == 4
+        self.winner
+        self.play_again
+      end
+
+      if @@tries == 11
+        puts Rainbow("Choose carefully. This is your last chance to win!").red
+      end
       
       if current_turn == 12
         self.game_over
