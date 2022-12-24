@@ -122,7 +122,6 @@ Clues: ● ○ ○"
       puts "#{UI::format(guess)} clues: #{@code.create_clues_from(guess)}"
       
       clues = Clue.make(@code.print_code, guess)
-      pp "Clues: #{clues} Guess: #{guess}"
       if clues.all?(:fill) && clues.length == 4
         self.winner
         self.play_again
