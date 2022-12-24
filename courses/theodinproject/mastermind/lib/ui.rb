@@ -10,4 +10,7 @@ module UI
     6 => Rainbow("  6  ").bg(:plum)
   }
 
+  def self.format(code)
+      code.map { |num| COLORS[num] }.join(" ") 
+  end
 end
