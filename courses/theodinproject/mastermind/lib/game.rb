@@ -85,10 +85,9 @@ Clues: ● ○ ○"
     puts "Press '2' to be the code BREAKER"
 
     user_input = gets.chomp
-    while (user_input != "1") || (user_input != "2")
+    while (user_input != "1") && (user_input != "2")
       puts Rainbow("Enter '1' to be the code MAKER or '2' to be the code BREAKER.").red
       user_input = gets.chomp
-      p user_input
     end
   end
   
@@ -98,24 +97,25 @@ Clues: ● ○ ○"
     @code = Code.new
   end
 
-  def draw
-    self.begin_tutorial
-  end
-
-  def update
+  def start_game
     puts "The computer has set the 'master code' and now it's time for you to break the code."
     puts "[DEBUG] Master Code: #{@code.print_code}"
     puts 
+    
+    while @@running 
+      puts "Turn ##{@@tries}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
 
-    current_turn = 1
+      input = gets.chomp
+      break if input == 'q'
 
-    loop do
-      puts "Turn ##{current_turn}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
-
-      guess = gets.chomp.split('').map(&:to_i)
-
-      if guess.length != 4 || !guess.all? { |n| n > 0 && n <= 6 }
-        puts Rainbow("Your guess should only be 4 digits between 1-6").red
+      guess = input.split('').map(&:to_i)
+      loop do
+        if guess.length != 4 || !guess.all? { |n| n > 0 && n <= 6 }
+          puts Rainbow("Your guess should only be 4 digits between 1-6").red
+          guess = gets.chomp.split('').map(&:to_i)
+        else
+          break
+        end
       end
       
       puts
@@ -130,13 +130,13 @@ Clues: ● ○ ○"
         puts Rainbow("Choose carefully. This is your last chance to win!").red
       end
       
-      if current_turn == 12
+      if @@tries == 12
         self.game_over
         puts 
-        self.try_again
+        self.play_again
       end
 
-      current_turn += 1
+      @@tries += 1
     end
   end
 
