@@ -1,6 +1,12 @@
 require_relative 'code'
 
+module Mode
+  CODE_MAKER   = 1
+  CODE_BREAKER = 2
+end
+
 class Game
+    @@mode = nil
     @@tries   = 1
     @@running = true
     @@play_again = false
@@ -84,11 +90,12 @@ Clues: ● ○ ○"
     puts "Press '1' to be the code MAKER"
     puts "Press '2' to be the code BREAKER"
 
-    user_input = gets.chomp
-    while (user_input != "1") && (user_input != "2")
+    @@mode = gets.chomp.to_i
+    while (@@mode != 1) && (@@mode != 2)
       puts Rainbow("Enter '1' to be the code MAKER or '2' to be the code BREAKER.").red
-      user_input = gets.chomp
+      @@mode = gets.chomp.to_i
     end
+
   end
   
   private
@@ -98,11 +105,17 @@ Clues: ● ○ ○"
   end
 
   def start_game
+    pp @@mode
+    case @@mode
+    when Mode::CODE_MAKER
+    when Mode::CODE_BREAKER
+
     puts "The computer has set the 'master code' and now it's time for you to break the code."
     puts "[DEBUG] Master Code: #{@code.print_code}"
     puts 
     
     while @@running 
+
       puts "Turn ##{@@tries}: Type in four numbers (1-6) to guess the code, or 'q' to quit game."
 
       input = gets.chomp
@@ -139,6 +152,11 @@ Clues: ● ○ ○"
 
       @@tries += 1
     end
+
+    end
+
+
+    puts "Thank you for playing Mastermind!"
   end
 
 end
