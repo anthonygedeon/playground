@@ -63,3 +63,67 @@ main: x = 1 y = 2
 doIt: x = 1 y = 4
 doIt: x = 3 y = 4
 main: x = 1 y = 2
+
+# Section 2.7 Quiz Time
+1. What is a function prototype?
+	- the function prototype, or function declaration, is a forward declaration that has a return-type, identifier, optional parameters with types and identiifers and a semi-colon to end it. 
+
+2. What is a forward declaration?
+	- a way to tell the compiler that an identifier exist 
+
+3. How do we declare a forward declaration for functions?
+- a function declaration/prototype
+```c++
+	int foo(int x);
+```
+4. Write the function declaration for this function (use the preferred form with names):
+```c++
+	int doMath(int first, int second, int third, int fourth);
+```
+
+5. For each of the following programs, state whether they fail to compile, fail to link, fail both, or compile and link successfully. If you are not sure, try compiling them!
+
+a) fail to compile
+b) fail to compile
+c) compiles but fails to link
+d) successfully compile and link
+
+# Section Quiz Time 2.7
+```c++
+// get_integer.cpp
+
+#include <iostream> 
+
+int getInteger()
+{
+	std::cout << "Enter an integer: ";
+	int x{};
+	std::cin >> x;
+	return x;
+}
+```
+
+```c++
+// main.cpp
+#include <iostream> 
+
+int getInteger(); 
+
+int main()
+{
+	int x{ getInteger() };
+	int y{ getInteger() };
+
+	std::cout << x << " + " << y << " is " << x + y << '\n';
+	return 0;
+}
+```
+
+# Section 2.12 Quiz TIme
+1. Add header guards to this header file:
+```c++
+#if !defined(ADD_H)
+#define ADD_H
+	int add(int x, int y);
+#endif
+```
