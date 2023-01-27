@@ -42,7 +42,13 @@ impl<T> SimpleLinkedList<T> {
 
     pub fn len(&self) -> usize {
         let mut count: usize = 0;
+        
+        let mut tmp = &self.head;
 
+        while let Some(node) = tmp {
+           tmp = &node.next;
+           count += 1;
+        } 
         
         count
     }
