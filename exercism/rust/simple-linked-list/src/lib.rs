@@ -20,7 +20,7 @@ type Link<T> = Option<Box<Node<T>>>;
 #[derive(Debug)]
 pub struct SimpleLinkedList<T> {
     head: Link<T>,
-    tail: Link<T> 
+    tail: Link<T>,
 }
 
 impl<T> SimpleLinkedList<T> {
@@ -44,7 +44,6 @@ impl<T> SimpleLinkedList<T> {
         let mut count: usize = 0;
         
         let mut tmp = &self.head;
-
         while let Some(node) = tmp {
            tmp = &node.next;
            count += 1;
@@ -54,7 +53,14 @@ impl<T> SimpleLinkedList<T> {
     }
 
     pub fn push(&mut self, _element: T) {
-       unimplemented!() 
+        let new_node = Box::new(Node::new(_element));
+        
+        // grab the last node (before None)
+        let mut tmp = &self.head;
+        while let Some(node) = tmp {
+            tmp = &node.next;
+        } 
+         
     }
 
     pub fn pop(&mut self) -> Option<T> {
