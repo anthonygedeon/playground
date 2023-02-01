@@ -37,7 +37,7 @@ impl<T> SimpleLinkedList<T> {
     // whereas is_empty() is almost always cheap.
     // (Also ask yourself whether len() is expensive for SimpleLinkedList)
     pub fn is_empty(&self) -> bool {
-        unimplemented!()
+        self.head.is_none()
     }
 
     pub fn len(&self) -> usize {
@@ -55,13 +55,20 @@ impl<T> SimpleLinkedList<T> {
     pub fn push(&mut self, _element: T) {
         let new_node = Box::new(Node::new(_element));
         
-        // grab the last node (before None)
-        let mut tmp = &self.head;
-        while let Some(node) = tmp {
-            tmp = &node.next;
+        if self.head.is_none() {
+            self.head = Some(new_node);
+            return
+        }
+
+        // grab the last node
+        let mut tmp_ref = &mut self.head;
+        while let Some(ref mut node) = tmp_ref {
+           tmp_ref = &mut node.next;
         } 
-         
-    }
+        
+
+    
+    } 
 
     pub fn pop(&mut self) -> Option<T> {
         unimplemented!()
