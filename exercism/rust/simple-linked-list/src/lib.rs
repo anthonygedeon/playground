@@ -1,33 +1,23 @@
-use std::{iter::FromIterator};
+use std::{iter::FromIterator, mem};
+
+type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug )]
 struct Node<T> {
     data: T,
-    next: Option<Box<Self>>
+    next: Link<T> 
 }
 
-impl<T> Node<T> {
-    fn new(data: T) -> Self {
-        Self {
-            data,
-            next: None
-        }
-    }
-}
-
-type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug)]
 pub struct SimpleLinkedList<T> {
     head: Link<T>,
-    tail: Link<T>,
 }
 
 impl<T> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self {
             head: None,
-            tail: None
         }
     }
 
@@ -42,45 +32,50 @@ impl<T> SimpleLinkedList<T> {
 
     pub fn len(&self) -> usize {
         let mut count: usize = 0;
-        
+
         let mut tmp = &self.head;
         while let Some(node) = tmp {
            tmp = &node.next;
            count += 1;
         } 
-        
         count
     }
 
     pub fn push(&mut self, _element: T) {
-        let new_node = Box::new(Node::new(_element));
-        
-        if self.head.is_none() {
-            self.head = Some(new_node);
-            return
-        }
+        let new_node = Node {
+            data: _element,
+            next: mem::replace(&mut self.head, None)
+        };
 
-        // grab the last node
-        let mut tmp_ref = &mut self.head;
-        while let Some(ref mut node) = tmp_ref {
-           tmp_ref = &mut node.next;
-        } 
-        
-
-    
+        self.head = Some(Box::new(new_node));
+                 
     } 
 
     pub fn pop(&mut self) -> Option<T> {
-        unimplemented!()
+        let mut tmp = &self.head;
+        while let Some(node) = tmp {
+           tmp = &node.next;
+        } 
+        drop(tmp)
     }
 
     pub fn peek(&self) -> Option<&T> {
         unimplemented!()
     }
 
+    //fn walk_f<B>(n: &Node, f: &mut impl FnMut(&Node) -> ControlFlow<B>) -> ControlFlow<B> {
+    //    let mut n = n;
+    //    while let Some(next) = n.next.as_ref() {
+    //        f(n)?;
+    //        n = next;
+    //    }
+    //    ControlFlow::Continue(())
+    //}
+
     #[must_use]
     pub fn rev(self) -> SimpleLinkedList<T> {
-        unimplemented!()
+        let mut list: SimpleLinkedList<T> = SimpleLinkedList::new();
+        list
     }
 }
 

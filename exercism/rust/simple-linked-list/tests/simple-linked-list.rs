@@ -5,22 +5,8 @@ fn test_new_list_is_empty() {
     let list: SimpleLinkedList<u32> = SimpleLinkedList::new();
     assert_eq!(list.len(), 0, "list's length must be 0");
 }
-#[test]
-fn test_push_multiple() {
-    let mut list: SimpleLinkedList<u32> = SimpleLinkedList::new();
-    list.push(1);
-    list.push(2);
-    list.push(3);
-    list.push(4);
-    list.push(5);
-    list.push(6);
-    list.push(7);
-    list.push(8);
-    assert_eq!(list.len(), 8);
-}
 
 #[test]
-#[ignore]
 fn test_push_increments_length() {
     let mut list: SimpleLinkedList<u32> = SimpleLinkedList::new();
     list.push(1);
