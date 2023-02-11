@@ -1,0 +1,1 @@
+/home/anthony/repos/github.com/playground/books/think_like_a_programmer/half_of_a_square/target/debug/half_of_a_square: /home/anthony/repos/github.com/playground/books/think_like_a_programmer/half_of_a_square/src/main.rs
