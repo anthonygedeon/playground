@@ -5,10 +5,8 @@ pub fn hamming_distance(s1: &str, s2: &str) -> Option<usize> {
     
     let hamming_distance = s1.chars()
         .zip(s2.chars())
-        .fold(0, |mut diff: usize, (nucletide_a, nucletide_b)| {
-            if nucletide_a != nucletide_b { diff += 1; } 
-            diff
-        });
+        .filter(|(nucletide_a, nucletide_b)| nucletide_a != nucletide_b)
+        .count();
 
     Some(hamming_distance) 
 }
