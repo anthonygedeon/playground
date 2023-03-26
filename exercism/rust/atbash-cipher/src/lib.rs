@@ -2,6 +2,7 @@ use std::str;
 
 /// "Encipher" with the Atbash cipher.
 pub fn encode(plain: &str) -> String {
+    // TODO: refactor this grotesque code
     let encoded = plain
         .to_ascii_lowercase()
         .chars()
@@ -29,8 +30,5 @@ pub fn encode(plain: &str) -> String {
 
 /// "Decipher" with the Atbash cipher.
 pub fn decode(cipher: &str) -> String {
-    encode(cipher)
-        .chars()
-        .filter(|c| !c.is_ascii_whitespace())
-        .collect()
+    encode(cipher).split_ascii_whitespace().collect()
 }
