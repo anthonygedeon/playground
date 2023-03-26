@@ -52,7 +52,6 @@ fn test_decode_exercism() {
 }
 
 #[test]
-#[ignore]
 fn test_decode_a_sentence() {
     assert_eq!(
         cipher::decode("zmlyh gzxov rhlug vmzhg vkkrm thglm v"),
@@ -61,13 +60,11 @@ fn test_decode_a_sentence() {
 }
 
 #[test]
-#[ignore]
 fn test_decode_numbers() {
     assert_eq!(cipher::decode("gvhgr mt123 gvhgr mt"), "testing123testing");
 }
 
 #[test]
-#[ignore]
 fn test_decode_all_the_letters() {
     assert_eq!(
         cipher::decode("gsvjf rxpyi ldmul cqfnk hlevi gsvoz abwlt"),
@@ -76,13 +73,11 @@ fn test_decode_all_the_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_decode_with_too_many_spaces() {
     assert_eq!(cipher::decode("vc vix    r hn"), "exercism");
 }
 
 #[test]
-#[ignore]
 fn test_decode_with_no_spaces() {
     assert_eq!(
         cipher::decode("zmlyhgzxovrhlugvmzhgvkkrmthglmv"),
