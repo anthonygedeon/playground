@@ -5,7 +5,9 @@ pub fn encode(plain: &str) -> String {
     let encoded = plain
         .to_ascii_lowercase()
         .chars()
-        .filter(|c| !c.is_whitespace())
+        .filter(|c| !c.is_ascii_punctuation())
+        .filter(|c| !c.is_ascii_whitespace())
+        .inspect(|c| println!("{c}"))
         .map(|c| {
             if c.is_ascii_alphabetic() {
                 let wraped_char = (26 - (c as u8 % 97)) + 96;
@@ -26,6 +28,4 @@ pub fn encode(plain: &str) -> String {
 }
 
 /// "Decipher" with the Atbash cipher.
-pub fn decode(cipher: &str) -> String {
-    unimplemented!("Decoding of {cipher:?} in Atbash cipher.");
-}
+pub fn decode(cipher: &str) -> String {}

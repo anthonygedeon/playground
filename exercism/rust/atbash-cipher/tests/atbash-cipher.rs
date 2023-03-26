@@ -34,13 +34,11 @@ fn test_encode_numbers() {
 }
 
 #[test]
-#[ignore]
 fn test_encode_deep_thought() {
     assert_eq!(cipher::encode("Truth is fiction."), "gifgs rhurx grlm");
 }
 
 #[test]
-#[ignore]
 fn test_encode_all_the_letters() {
     assert_eq!(
         cipher::encode("The quick brown fox jumps over the lazy dog."),
@@ -49,7 +47,6 @@ fn test_encode_all_the_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_decode_exercism() {
     assert_eq!(cipher::decode("vcvix rhn"), "exercism");
 }
