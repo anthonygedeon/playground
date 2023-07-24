@@ -2,4 +2,8 @@
 
 int main(void) {
         printf("Hello, world!\n");
+
+        // Does not compile
+        // printf("Hello, world!\n 
+        // ")
 }

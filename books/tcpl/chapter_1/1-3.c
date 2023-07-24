@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#define IMPROVED true
 
 int main() {
        float fahr, celsius;                                 

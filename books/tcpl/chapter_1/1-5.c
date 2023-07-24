@@ -1,18 +1,14 @@
 #include <stdio.h>
 
+#define MAX_F 300
+
+#define F_TO_C(f) (5.0/9.0) * (f-32.0)
+
 int main() {
-       float fahr, celsius;                             
-       int lower, upper, step;                          
-       
-       lower = 0;                                       
-       upper = 300;                                     
-       step = 20;
-       
-       fahr = upper;                                    
-       while (fahr >= lower) {                          
-           celsius = (5.0/9.0) * (fahr-32.0);           
-           printf("%3.0f\t%.1f\n", fahr, celsius);      
-           fahr = fahr - step;
-       }   
+  float celsius;                             
+  for (int i = MAX_F; i > 0; i -= 20) {
+     celsius = F_TO_C(i);
+     printf("%3.0d\t%.1f\n", i, celsius);      
+  }
 }                                                       
 

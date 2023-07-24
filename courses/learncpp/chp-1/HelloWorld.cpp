@@ -3,7 +3,7 @@
 int main() 
 { // every c++ program must have main or linkage will not occur
   // start of function body
-	std::cout << "Hello World!"; // cout: character output 
+	std::cout << "Hello World!" << '\n'; // cout: character output 
 								 // << is an operator like +, -, /, %:w
 	return 0;
 } // end of function body

@@ -2,6 +2,6 @@
 
 int main() {
         int c; 
-        printf("%i\n", getchar() != EOF);
+        printf("%i\n", ((c = getchar()) != EOF));
         return 0;
 }
