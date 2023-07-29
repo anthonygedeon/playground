@@ -41,10 +41,6 @@ int get_line(char s[], int lim) {
 		i += 1;
 	}
 	s[i] = '\0';
-	
-	// we use getchar() again because in the impl
-	// getchar utilzes a static buffer so `c` will 
-	// point to the same buffer as linegetchar above 
 
 	return i;
 }
