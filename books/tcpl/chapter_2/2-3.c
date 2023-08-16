@@ -7,30 +7,19 @@
 int htoi(const char hex[]);
 
 int main(void) {
-	printf("%i\n", htoi("0x7DE"));
-	printf("%i\n", htoi("0X7DE"));
-	printf("%i\n", htoi("7de"));
+	printf("%i", htoi("0x7DE"));
+	printf("%i", htoi("0X7DE"));
+	printf("%i", htoi("7de"));
 
 	return EXIT_SUCCESS;
 }
 
 int htoi(const char hex[]) {
-	int length = 0;
-	int state = 0;
-	for (int i = 0; i < strlen(hex) && hex[i] != '\0'; i += 1) {
-		if (tolower(hex[i]) == 'x')  {
-			state = 1;
-		}
-
-		if (state == 1) {
-			length += 1;
-		}
-	}
-
+	
 	int result = 0;
 	for (int i = 0; i < strlen(hex) && hex[i] != '\0'; i += 1) {
-		int lower_hex = tolower(hex[i]);
 		int hex_value = 0;
+		int lower_hex = tolower(hex[i]);
 
 		if (isdigit(lower_hex)) {
 			hex_value = lower_hex - '0';
