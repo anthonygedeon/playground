@@ -54,7 +54,6 @@ static void test_commands_combine_two_actions(void)
 
 static void test_commands_reverse_two_actions(void)
 {
-   TEST_IGNORE();
    const char *expected[] = { "double blink", "wink" };
    const char **actual = commands(19);
    TEST_ASSERT_EQUAL_STRING_ARRAY(expected, actual, ARRAY_SIZE(expected));
