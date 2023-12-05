@@ -14,7 +14,10 @@ char *abbreviate(const char *phrase) {
 		return NULL;
 	}
 
-	char *acronynm = malloc(1024*sizeof(char));
+	char *acronynm = malloc(strlen(phrase) + 1);
+	if (acronynm == NULL) {
+		return NULL;
+	}
 	
 	bool state = ALPHABET;
 	size_t acronym_length = 0;
